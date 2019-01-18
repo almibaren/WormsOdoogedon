@@ -156,9 +156,13 @@ public class Servidor : MonoBehaviour
 
     private void SymfonyConnect(int cnnId, string playerName, string playerPasswd)
     {
-        //Conectar con symphon
-      
-    
+        //Conectar con symphony
+        string LoginUrl = "http://192.168.6.7/ws/login";
+        WWWForm loginArray = new WWWForm();
+        loginArray.AddField("user", playerName);
+        loginArray.AddField("passwd", playerPasswd);
+        WWW www = new WWW(LoginUrl,loginArray);
+
 
         //Enviar a los demas clientes el jugador conectado
         //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
