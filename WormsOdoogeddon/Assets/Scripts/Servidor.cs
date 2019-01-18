@@ -28,20 +28,13 @@ public class Servidor : MonoBehaviour
     private bool isStarted = false;
     private byte error;
 
-    private int[] numeros = new int[30];
-
-    int velocidadPelota = 3;
-
     private List<ServerClient> clients = new List<ServerClient>();
 
 
     private void Start()
     {
 
-        for (int i = 0; i < numeros.Length - 1; i++) {
-            numeros[i]= Random.Range(0,3);
-        }
-
+     
         NetworkTransport.Init();
         ConnectionConfig cc = new ConnectionConfig();
 
@@ -91,19 +84,8 @@ public class Servidor : MonoBehaviour
                 switch (splitData[0])
                 {
                     case "NAMEIS":
-                        OnNameIs(connectionId, splitData[1]);
-                        if (connectionId % 2 != 0)
-                        {
-
-                        }
-                        else {
-                            string bolis = "";
-                            for (int i = 0; i < numeros.Length - 1; i++) {
-                                 bolis += numeros[i] + ".";
-                            }
-                            Send("BOLAS|"+splitData[1]+"|"+bolis, reliableChannel, clients);
-                            Send("BOLAS|" + clients.Find(x => x.playerName != splitData[1]).playerName + "|" + bolis, reliableChannel, clients);
-                        }
+                        SymfonyConnect(connectionId, splitData[1],splitData[2]);
+                        
                         break;
 
                     case "CNN":
@@ -115,46 +97,6 @@ public class Servidor : MonoBehaviour
                     case "EMPEZAR":
                         //Debug.Log("EMPEZAR" + msg);
                         Send("EMPEZAR|", reliableChannel, clients);
-                        break;
-
-                    case "GIRARIZQ":
-                        Debug.Log("GIRARIZQ" + msg);
-                        Send("MOVER|" + splitData[1] + "|50", reliableChannel, clients);
-                        break;
-
-                    case "GIRARDER":
-                        Debug.Log("GIRARDER" + msg);
-                        Send("MOVER|" + splitData[1] + "|-50", reliableChannel, clients);
-                        break;
-
-                    case "PARARAGUJA":
-                        
-                        Send("MOVER|" + splitData[1] + "|0", reliableChannel, clients);
-                        break;
-                       
-                    case "MOVERBOLA":
-                        
-                        Send("MOVERBOLA|" + splitData[1] + "|" + splitData[2]+ "|"+splitData[3], reliableChannel, clients);
-                        break;
-
-                    case "BOLACHOQUEBOLA":
-                        //Debug.Log("MOVERPELOTA" + msg);
-                        Send("BOLACHOQUEBOLAS|" + splitData[1], reliableChannel, clients);
-                        break;
-
-                    case "BOLACHOQUEPARED":
-                        //Debug.Log("MOVERPELOTA" + msg);
-                        Send("BOLACHOQUEPARED|" + splitData[1] , reliableChannel, clients);
-                        break;
-
-                    case "BOLACHOQUETECHO":
-                        //Debug.Log("MOVERPELOTA" + msg);
-                        Send("BOLACHOQUETECHO|" + splitData[1], reliableChannel, clients);
-                        break;
-
-                    case "BOLACHOQUEPINCHO":
-                        Debug.Log("BOLACHOQUEPINCHO| " + msg);
-                        Send("BOLACHOQUEPINCHO|" + splitData[1] + "|2", reliableChannel, clients);
                         break;
 
                     default:
@@ -212,18 +154,16 @@ public class Servidor : MonoBehaviour
         }
     }
 
-    private void OnNameIs(int cnnId, string playerName)
+    private void SymfonyConnect(int cnnId, string playerName, string playerPasswd)
     {
-        //Asignar el nombre al id de la conexion
-        clients.Find(x => x.connectionId == cnnId).playerName = playerName;
-
-        Debug.Log("Numero de clientes" + clients.Count);
-
+        //Conectar con symphon
+      
+    
 
         //Enviar a los demas clientes el jugador conectado
         //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
         //Send("CNN|" + playerName + '|' + cnnId,reliableChannel,clients);
-        Send("CNN|" + playerName + '|' + cnnId, reliableChannel, clients);
+
     }
 
 }
