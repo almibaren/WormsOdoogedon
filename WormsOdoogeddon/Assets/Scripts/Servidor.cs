@@ -165,8 +165,9 @@ public class Servidor : MonoBehaviour
         loginArray.AddField("user", playerName);
         loginArray.AddField("passwd", playerPasswd);
         WWW www = new WWW(LoginUrl,loginArray);
+
         StartCoroutine(WaitForWWW(www));
-        
+
         
            
 
@@ -181,7 +182,7 @@ public class Servidor : MonoBehaviour
 
     private IEnumerator WaitForWWW(WWW www)
     {
-        
+
 
         yield return www;
         string idUser="";
