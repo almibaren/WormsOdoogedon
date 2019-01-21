@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Net;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -157,17 +160,37 @@ public class Servidor : MonoBehaviour
     private void SymfonyConnect(int cnnId, string playerName, string playerPasswd)
     {
         //Conectar con symphony
-        string LoginUrl = "http://192.168.6.7/ws/login";
+        string LoginUrl = "http://192.168.6.7:8000/ws/login";
         WWWForm loginArray = new WWWForm();
         loginArray.AddField("user", playerName);
         loginArray.AddField("passwd", playerPasswd);
         WWW www = new WWW(LoginUrl,loginArray);
-        Debug.Log("eOEOOOEOOEOEOEOEO");
+        WaitForWWW(www);
+        
+        
+           
+
+        
+       
 
         //Enviar a los demas clientes el jugador conectado
         //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
-        //Send("CNN|" + playerName + '|' + cnnId,reliableChannel,clients);
+       
 
     }
 
+    private IEnumerator WaitForWWW(WWW www)
+    {
+        string f = www.text;
+        yield return www;
+        string idUser="";
+        if (string.IsNullOrEmpty(www.error)) {
+            idUser = JsonUtility.FromJson<WWW>(www.text).text;
+            Debug.Log(idUser);
+        }
+        else
+        {
+            Debug.Log(www.error);
+        }
+    }
 }
