@@ -162,7 +162,7 @@ public class Servidor : MonoBehaviour
         loginArray.AddField("user", playerName);
         loginArray.AddField("passwd", playerPasswd);
         WWW www = new WWW(LoginUrl,loginArray);
-
+        Debug.Log("eOEOOOEOOEOEOEOEO");
 
         //Enviar a los demas clientes el jugador conectado
         //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
