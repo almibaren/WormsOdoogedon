@@ -39,14 +39,14 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-
+    public GameObject nombre, password;
     private string user,passwd; 
 
     public void Connect()
     {
 
-        user = GameObject.Find("inputUsuario").GetComponent<InputField>().text;
-        passwd = GameObject.Find("inputPassword").GetComponent<InputField>().text;
+        user = nombre.GetComponent<InputField>().text;
+        passwd = password.GetComponent<InputField>().text;
 
         if (user.Trim().Equals("") || passwd.Trim().Equals("")) {
             Debug.Log("Debes rellenar los campos");
@@ -135,6 +135,7 @@ public class Cliente : MonoBehaviour
         ourClientId = int.Parse(data[1]);
 
         //Enviar el nombre al servidor
+   
         Send("NAMEIS|" + user +"|" + passwd, reliableChannel);
 
         //enviar datos al resto de jugadores
