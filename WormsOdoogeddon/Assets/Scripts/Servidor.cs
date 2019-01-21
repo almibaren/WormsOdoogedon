@@ -165,9 +165,8 @@ public class Servidor : MonoBehaviour
         loginArray.AddField("user", playerName);
         loginArray.AddField("passwd", playerPasswd);
         WWW www = new WWW(LoginUrl,loginArray);
-
-        StartCoroutine(WaitForWWW(www));
-
+        StartCoroutine(WaitForWWW(www,  cnnId, playerName));
+        
         
            
 
@@ -180,15 +179,14 @@ public class Servidor : MonoBehaviour
 
     }
 
-    private IEnumerator WaitForWWW(WWW www)
+    private IEnumerator WaitForWWW(WWW www, int cnnId, string playerName)
     {
-
-
         yield return www;
-        string idUser="";
+       
         if (string.IsNullOrEmpty(www.error)) {
-            idUser = JsonUtility.FromJson<WWW>(www.text).text;
-            Debug.Log(idUser);
+            JSONObject f = new JSONObject(www.text);
+            //Debug.Log(f[0]["id"].ToString());
+            Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
         }
         else
         {
