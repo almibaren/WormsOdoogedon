@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Text;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEditor;
 
 
 public class Player
@@ -39,17 +41,18 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-    public GameObject nombre, password;
+    public GameObject nombre, password,popup;
     private string user,passwd; 
 
     public void Connect()
     {
-
+        popup = GameObject.Find("Login").transform.Find("Panel").transform.Find("errorTxt").gameObject;
         user = nombre.GetComponent<InputField>().text;
         passwd = password.GetComponent<InputField>().text;
 
         if (user.Trim().Equals("") || passwd.Trim().Equals("")) {
-            Debug.Log("Debes rellenar los campos");
+            popup.SetActive(true);
+            popup.transform.GetComponent<Text>().text="DEBES RELLENAR LOS CAMPOS";
             return;
         }
 
@@ -104,8 +107,8 @@ public class Cliente : MonoBehaviour
                         break;
 
                     case "CNN":
-                        Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2]);
-                        /*SpawnPlayer(splitData[1], int.Parse(splitData[2]));*/
+                        Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
+                        Loggeado(int.Parse(splitData[3]));
                         break;
 
                     case "DC":
@@ -152,6 +155,22 @@ public class Cliente : MonoBehaviour
         //Debug.Log("Sending: " + message);
         byte[] msg = Encoding.Unicode.GetBytes(message);
         NetworkTransport.Send(hostId, connectionId, channelId, msg, message.Length * sizeof(char), out error);
+
+    }
+
+    private void Loggeado(int id) {
+        if (id == -1)
+        {
+            popup.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
+            popup.SetActive(true);
+           // GameObject.Find("PopUp").Equals(EditorUtility.DisplayDialog("El usuario o la Contraseña no son correctos", "", "OK", ""));
+            nombre.GetComponent<InputField>().text = "";
+            password.GetComponent<InputField>().text = "";
+        }
+        else {
+            SceneManager.LoadScene("Menu");
+        }
+
 
     }
 
