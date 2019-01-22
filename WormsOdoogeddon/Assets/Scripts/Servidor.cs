@@ -167,16 +167,8 @@ public class Servidor : MonoBehaviour
         WWW www = new WWW(LoginUrl,loginArray);
         StartCoroutine(WaitForWWW(www, cnnId, playerName));
         
-        
-           
-
-        
-       
-
         //Enviar a los demas clientes el jugador conectado
         //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
-       
-
     }
 
     private IEnumerator WaitForWWW(WWW www, int cnnId, string playerName)
@@ -188,15 +180,13 @@ public class Servidor : MonoBehaviour
             Debug.Log(f.ToString());
             if (f.ToString().Equals("[]")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
-            }
-            else{
+            }else{
                 Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);   
             }
             //Debug.Log(f[0]["id"].ToString());
         }
         else
-        {
-            
+        {          
             Debug.Log(www.error);
         }
     }

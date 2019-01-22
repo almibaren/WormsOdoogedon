@@ -42,10 +42,12 @@ public class Cliente : MonoBehaviour
 
     public List<Player> jugadores = new List<Player>();
     public GameObject nombre, password,popup;
-    private string user,passwd; 
+    private string user,passwd;
+    public GameObject canvas1, canvas2;
 
     public void Connect()
     {
+        
         popup = GameObject.Find("Login").transform.Find("Panel").transform.Find("errorTxt").gameObject;
         user = nombre.GetComponent<InputField>().text;
         passwd = password.GetComponent<InputField>().text;
@@ -168,7 +170,8 @@ public class Cliente : MonoBehaviour
             password.GetComponent<InputField>().text = "";
         }
         else {
-            SceneManager.LoadScene("Menu");
+            
+            canvas2.SetActive(true);canvas1.SetActive(false);
         }
 
 
@@ -200,7 +203,9 @@ public class Cliente : MonoBehaviour
         jugadores.Add(p);
         
     }*/
-
+    public void Registrar() {
+        Application.OpenURL("http://192.168.6.7:8000/registrar");        
+    }
     public int getClienteId()
     {
 
