@@ -48,6 +48,10 @@ public class Cliente : MonoBehaviour
     public GameObject canvas1, canvas2;
     public Text usuario;
 
+    public void Awake() {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     public void Connect()
     {
         
