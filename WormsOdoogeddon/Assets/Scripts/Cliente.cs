@@ -114,9 +114,10 @@ public class Cliente : MonoBehaviour
                     case "CNN":
                         Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
                         if (splitData[1].Equals(user)){
-                            rellenarCamposJugador(jugadorLocal, splitData);
+                            rellenarCamposJugadorLocal(splitData);
+                            Debug.Log(jugadorLocal.idUsuario +"aaa");
                         } else {
-                            rellenarCamposJugador(jugadorRival, splitData);
+                            rellenarCamposJugadorRival(splitData);
                         }
                         Loggeado(int.Parse(splitData[3]));
                         break;
@@ -220,11 +221,17 @@ public class Cliente : MonoBehaviour
 
         return connectionId;
     }
-    private void rellenarCamposJugador(Player player, string[] splitData) {
-        player = new Player();
-        player.idUsuario = int.Parse(splitData[3]);
-        player.playerName = splitData[1];
-        player.connectId = int.Parse(splitData[2]);
+    private void rellenarCamposJugadorLocal( string[] splitData) {
+        jugadorLocal = new Player();
+        jugadorLocal.idUsuario = int.Parse(splitData[3]);
+        jugadorLocal.playerName = splitData[1];
+        jugadorLocal.connectId = int.Parse(splitData[2]);
+    }
+    private void rellenarCamposJugadorRival(string[] splitData) {
+        jugadorRival = new Player();
+        jugadorRival.idUsuario = int.Parse(splitData[3]);
+        jugadorRival.playerName = splitData[1];
+        jugadorRival.connectId = int.Parse(splitData[2]);
     }
     public void inventario() {
         Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName,reliableChannel);

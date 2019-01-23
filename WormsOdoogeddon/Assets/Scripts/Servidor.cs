@@ -104,6 +104,7 @@ public class Servidor : MonoBehaviour
 
                     case "INV":
                         inventario(int.Parse(splitData[1]),connectionId,splitData[2]);
+                        
                         break;
 
                     default:
@@ -211,11 +212,11 @@ public class Servidor : MonoBehaviour
         if (string.IsNullOrEmpty(www.error)) {
             JSONObject f = new JSONObject(www.text);
             Debug.Log(f.ToString());
-            if (f.ToString().Equals("[]")) {
+            /*if (f.ToString().Equals("[]")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             } else {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
-            }
+            }*/
             //Debug.Log(f[0]["id"].ToString());
         } else {
             Debug.Log(www.error);
