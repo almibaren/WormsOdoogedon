@@ -230,9 +230,9 @@ public class Servidor : MonoBehaviour
             }
             Debug.Log(nombres + "|" + contador + "|" + rutas);
             if (f.ToString().Equals("[]")) {
-                Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
+                Send("INV|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             } else {
-                Send("CNN|" + playerName + '|' + cnnId + '|' + nombres + "|" + rutas + "|" + contador, reliableChannel, clients);
+                Send("INV|" + playerName + '|' + cnnId + '|' + nombres + "|" + rutas + "|" + contador, reliableChannel, clients);
             }
             //Debug.Log(f[0]["id"].ToString());
         } else {
