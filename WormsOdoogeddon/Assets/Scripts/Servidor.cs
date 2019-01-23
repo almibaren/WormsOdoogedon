@@ -102,6 +102,10 @@ public class Servidor : MonoBehaviour
                         Send("EMPEZAR|", reliableChannel, clients);
                         break;
 
+                    case "INV":
+                        inventario(int.Parse(splitData[1]),connectionId,splitData[2]);
+                        break;
+
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
                         break;
@@ -115,6 +119,8 @@ public class Servidor : MonoBehaviour
         }
 
     }
+
+
 
     private void OnConnection(int cnnId)
     {
@@ -187,6 +193,31 @@ public class Servidor : MonoBehaviour
         }
         else
         {          
+            Debug.Log(www.error);
+        }
+    }
+    private void inventario(int idUsuario, int cnnId, string playerName) {
+        //Conectar con symphony
+        string url = "http://192.168.6.7:8000/ws/inventario";
+        WWWForm usuario = new WWWForm();
+        usuario.AddField("idUsuario", idUsuario);
+        WWW www = new WWW(url, usuario);
+
+        StartCoroutine(ConexionInventario(www, cnnId, playerName));
+    }
+    private IEnumerator ConexionInventario(WWW www, int cnnId, string playerName) {
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            JSONObject f = new JSONObject(www.text);
+            Debug.Log(f.ToString());
+            if (f.ToString().Equals("[]")) {
+                Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
+            } else {
+                Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
+            }
+            //Debug.Log(f[0]["id"].ToString());
+        } else {
             Debug.Log(www.error);
         }
     }

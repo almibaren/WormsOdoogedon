@@ -227,6 +227,6 @@ public class Cliente : MonoBehaviour
         player.connectId = int.Parse(splitData[2]);
     }
     public void inventario() {
-        Send("INV|" + jugadorLocal.idUsuario,reliableChannel);
+        Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName,reliableChannel);
     }
 }
