@@ -14,6 +14,7 @@ public class Player
     public int posJugador;
     public GameObject avatar;
     public int connectId;
+    public int idUsuario;
 }
 
 
@@ -28,6 +29,7 @@ public class Cliente : MonoBehaviour
 
     private int reliableChannel;
     private int unReliableChannel;
+    private Player jugadorLocal, jugadorRival;
 
     private float connectionTime;
     private int connectionId;
@@ -111,6 +113,11 @@ public class Cliente : MonoBehaviour
 
                     case "CNN":
                         Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
+                        if (splitData[1].Equals(user)){
+                            rellenarCamposJugador(jugadorLocal, splitData);
+                        } else {
+                            rellenarCamposJugador(jugadorRival, splitData);
+                        }
                         Loggeado(int.Parse(splitData[3]));
                         break;
 
@@ -212,5 +219,14 @@ public class Cliente : MonoBehaviour
     {
 
         return connectionId;
+    }
+    private void rellenarCamposJugador(Player player, string[] splitData) {
+        player = new Player();
+        player.idUsuario = int.Parse(splitData[3]);
+        player.playerName = splitData[1];
+        player.connectId = int.Parse(splitData[2]);
+    }
+    public void inventario() {
+        Send("INV|" + jugadorLocal.idUsuario,reliableChannel);
     }
 }
