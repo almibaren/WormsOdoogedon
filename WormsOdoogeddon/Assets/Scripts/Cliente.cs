@@ -240,4 +240,7 @@ public class Cliente : MonoBehaviour
     public void inventario() {
         Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName,reliableChannel);
     }
+    public void jugar() {
+        SceneManager.LoadScene("Juego");
+    }
 }
