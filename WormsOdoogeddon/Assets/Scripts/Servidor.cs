@@ -212,11 +212,28 @@ public class Servidor : MonoBehaviour
         if (string.IsNullOrEmpty(www.error)) {
             JSONObject f = new JSONObject(www.text);
             Debug.Log(f.ToString());
-            /*if (f.ToString().Equals("[]")) {
+            String nombres="", rutas="";
+            bool datos = true;
+            int contador=0;
+            while (datos) {
+               
+                try {
+                    nombres = nombres + f[contador]["nombre"] + ".";
+                    rutas = rutas + f[contador]["imagen"].ToString().Split('/')[1] + ".";
+                    contador++;
+                    if (f[contador].Equals("")) {
+                        datos = false;
+                    }
+                } catch(Exception e) {
+                    datos = false;
+                }
+            }
+            Debug.Log(nombres + "|" + contador + "|" + rutas);
+            if (f.ToString().Equals("[]")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             } else {
-                Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
-            }*/
+                Send("CNN|" + playerName + '|' + cnnId + '|' + nombres + "|" + rutas + "|" + contador, reliableChannel, clients);
+            }
             //Debug.Log(f[0]["id"].ToString());
         } else {
             Debug.Log(www.error);

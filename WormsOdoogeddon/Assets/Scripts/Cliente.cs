@@ -119,7 +119,7 @@ public class Cliente : MonoBehaviour
                         } else {
                             rellenarCamposJugadorRival(splitData);
                         }
-                        Loggeado(int.Parse(splitData[3]));
+                        Loggeado(int.Parse(splitData[3]), splitData[1]);
                         break;
 
                     case "DC":
@@ -169,7 +169,7 @@ public class Cliente : MonoBehaviour
 
     }
 
-    private void Loggeado(int id) {
+    private void Loggeado(int id, string player) {
         if (id == -1)
         {
             popup.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
