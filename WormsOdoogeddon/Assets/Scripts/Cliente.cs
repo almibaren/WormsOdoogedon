@@ -37,13 +37,14 @@ public class Cliente : MonoBehaviour
     private byte error;
 
     //el nombre del usuario
-    public string playerName;
+    //public string playerName;
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
     public GameObject nombre, password,popup;
     private string user,passwd;
     public GameObject canvas1, canvas2;
+    public Text usuario;
 
     public void Connect()
     {
@@ -170,8 +171,9 @@ public class Cliente : MonoBehaviour
             password.GetComponent<InputField>().text = "";
         }
         else {
-            
-            canvas2.SetActive(true);canvas1.SetActive(false);
+            canvas1.SetActive(false);
+            canvas2.SetActive(true);
+            //usuario.text = user;
         }
 
 
