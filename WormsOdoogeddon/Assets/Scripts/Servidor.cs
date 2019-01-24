@@ -106,6 +106,12 @@ public class Servidor : MonoBehaviour
                         inventario(int.Parse(splitData[1]),connectionId,splitData[2]);
                         
                         break;
+                    case "POS1":
+                        Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel,clients);
+                        break;
+                    case "POS2":
+                        Send("POS2|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
