@@ -138,11 +138,9 @@ public class Cliente : MonoBehaviour
                        
                         break;
                     case "POS1":
-                        posJ1 = new GameObject();
                         posJ1.transform.position = new Vector3(float.Parse(splitData[1]),float.Parse(splitData[2]),0);
                         break;
                     case "POS2":
-                        posJ2 = new GameObject();
                         posJ2.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
                         break;
 
