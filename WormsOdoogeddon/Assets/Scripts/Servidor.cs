@@ -33,6 +33,8 @@ public class Servidor : MonoBehaviour
 
     private List<ServerClient> clients = new List<ServerClient>();
 
+    bool primerJugadoCreado = false;
+    GameObject posJ1;
 
     private void Start()
     {
@@ -49,6 +51,9 @@ public class Servidor : MonoBehaviour
         webHostId = NetworkTransport.AddWebsocketHost(topo, port, null);
 
         isStarted = true;
+
+        posJ1 = new GameObject();
+        posJ1.transform.position = new Vector3(0, 0, -300);
 
         //Debug.Log("Arranacado");
 
@@ -69,6 +74,8 @@ public class Servidor : MonoBehaviour
         int bufferSize = 1024;
         int dataSize;
         byte error;
+        
+        
         NetworkEventType recData = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, bufferSize, out dataSize, out error);
         switch (recData)
         {
@@ -107,7 +114,13 @@ public class Servidor : MonoBehaviour
                         
                         break;
                     case "POS1":
-                        Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel,clients);
+                        if (posJ1.transform.position.z == -300) {
+                            Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                            posJ1.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
+                        } else {
+                            Send("POS1|" + posJ1.transform.position.x + "|" + posJ1.transform.position.y, reliableChannel, clients);
+                            Send("POS2|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                        }
                         break;
                     case "POS2":
                         Send("POS2|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);

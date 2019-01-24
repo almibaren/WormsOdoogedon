@@ -10,11 +10,12 @@ public class Juego : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         ClienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
-        if (ClienteScript.getposJ1().transform.position.z == -300) {
+        ClienteScript.juegoEmpezado();
+        //if (ClienteScript.getposJ1().transform.position.z == -300) {
             ClienteScript.setposJ1(posJ1);
-        } else {
+        /*} else {
             ClienteScript.setposJ2(posJ2);
-        }
+        }*/
         
     }
 

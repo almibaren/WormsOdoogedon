@@ -48,6 +48,7 @@ public class Cliente : MonoBehaviour
     public GameObject canvas1, canvas2;
     public Text usuario;
     public GameObject prefabGusano, posJ1,posJ2;
+    private bool juego = false, jugadoresCreados = false;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -79,10 +80,7 @@ public class Cliente : MonoBehaviour
 
         connectionTime = Time.time;
         isConnected = true;
-        posJ1 = new GameObject();
-        posJ2 = new GameObject();
-        posJ1.transform.position = new Vector3(0, 0, -300);
-        posJ2.transform.position = new Vector3(0, 0, -300);
+        
 
     }
 
@@ -122,7 +120,7 @@ public class Cliente : MonoBehaviour
 
                     case "CNN":
                         Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
-                        if (splitData[1].Equals(user)){
+                        if (splitData[2].Equals(connectionId)){
                             rellenarCamposJugadorLocal(splitData);
                             Debug.Log(jugadorLocal.idUsuario +"aaa");
                         } else {
@@ -138,7 +136,7 @@ public class Cliente : MonoBehaviour
                        
                         break;
                     case "POS1":
-                        posJ1.transform.position = new Vector3(float.Parse(splitData[1]),float.Parse(splitData[2]),0);
+                        posJ1.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
                         break;
                     case "POS2":
                         posJ2.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
@@ -154,10 +152,13 @@ public class Cliente : MonoBehaviour
                 /* case NetworkEventType.DisconnectEvent:
                      break;*/
         }
-
-        if(posJ1.transform.position.z!=-300 && posJ2.transform.position.z != -300) {
-            Debug.Log("HOLA");
-            SpawnPlayer();
+        if (juego) {
+            if (posJ1.transform.position.z != -300 && posJ2.transform.position.z != -300) {
+                Debug.Log("HOLA");
+                if (!jugadoresCreados) { 
+                    SpawnPlayer();
+                }
+            }
         }
 
     }
@@ -206,11 +207,11 @@ public class Cliente : MonoBehaviour
 
     }
 
-    public void setposJ1(GameObject posJ1) {
-        Send("POS1|" + posJ1.transform.position.x + "|" + posJ1.transform.position.y, reliableChannel);
+    public void setposJ1(GameObject posiJ1) {
+        Send("POS1|" + posiJ1.transform.position.x + "|" + posiJ1.transform.position.y, reliableChannel);
     }
-    public void setposJ2(GameObject posJ2) {
-        Send("POS2|" + posJ2.transform.position.x + "|" + posJ2.transform.position.y, reliableChannel);
+    public void setposJ2(GameObject posiJ2) {
+        Send("POS2|" + posiJ2.transform.position.x + "|" + posiJ2.transform.position.y, reliableChannel);
     }
     public GameObject getposJ1() {
         return posJ1;
@@ -225,8 +226,10 @@ public class Cliente : MonoBehaviour
             jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
         } else {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-            jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
+            jugadorRival.avatar = Instantiate(prefabGusano, 
+                posJ1.transform.position, Quaternion.identity);
         }
+        jugadoresCreados = true;
         Debug.Log("CREAR JUGADORES");
     }
 
@@ -285,5 +288,12 @@ public class Cliente : MonoBehaviour
     public void inventarioTienda() {
         //He intentado que abra la tienda ya loggeado pero resulta imposible hacer openUrl + post. O uno u otro pero los 2 juntos no se pueden.
         Application.OpenURL("http://192.168.6.7:8000/login");
+    }
+    public void juegoEmpezado() {
+        posJ1 = new GameObject();
+        posJ2 = new GameObject();
+        posJ1.transform.position = new Vector3(0, 0, -300);
+        posJ2.transform.position = new Vector3(0, 0, -300);
+        juego = true;
     }
 }
