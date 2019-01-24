@@ -284,4 +284,8 @@ public class Cliente : MonoBehaviour
     public void jugar() {
         SceneManager.LoadScene("Juego");
     }
+    public void inventarioTienda() {
+        //He intentado que abra la tienda ya loggeado pero resulta imposible hacer openUrl + post. O uno u otro pero los 2 juntos no se pueden.
+        Application.OpenURL("http://192.168.6.7:8000/login");
+    }
 }
