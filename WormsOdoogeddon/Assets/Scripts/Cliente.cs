@@ -47,6 +47,7 @@ public class Cliente : MonoBehaviour
     private string user,passwd;
     public GameObject canvas1, canvas2;
     public Text usuario;
+    public GameObject prefabGusano, posJ1,posJ2;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -78,6 +79,10 @@ public class Cliente : MonoBehaviour
 
         connectionTime = Time.time;
         isConnected = true;
+        posJ1 = new GameObject();
+        posJ2 = new GameObject();
+        posJ1.transform.position = new Vector3(0, 0, -300);
+        posJ2.transform.position = new Vector3(0, 0, -300);
 
     }
 
@@ -132,6 +137,12 @@ public class Cliente : MonoBehaviour
                     case "EMPEZAR":
                        
                         break;
+                    case "POS1":
+                        posJ1.transform.position = new Vector3(float.Parse(splitData[1]),float.Parse(splitData[2]),0);
+                        break;
+                    case "POS2":
+                        posJ2.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
@@ -144,6 +155,10 @@ public class Cliente : MonoBehaviour
                      break;*/
         }
 
+        if(posJ1.transform.position.z!=-300 && posJ2.transform.position.z != -300) {
+            Debug.Log("HOLA");
+            SpawnPlayer();
+        }
 
     }
 
@@ -189,6 +204,30 @@ public class Cliente : MonoBehaviour
         }
 
 
+    }
+
+    public void setposJ1(GameObject posJ1) {
+        Send("POS1|" + posJ1.transform.position.x + "|" + posJ1.transform.position.y, reliableChannel);
+    }
+    public void setposJ2(GameObject posJ2) {
+        Send("POS2|" + posJ2.transform.position.x + "|" + posJ2.transform.position.y, reliableChannel);
+    }
+    public GameObject getposJ1() {
+        return posJ1;
+    }
+    public GameObject getposJ2() {
+        return posJ2;
+    }
+
+    public void SpawnPlayer() {
+        if(jugadorLocal.connectId % 2 != 0) {
+            jugadorLocal.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
+            jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
+        } else {
+            jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
+            jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
+        }
+        Debug.Log("CREAR JUGADORES");
     }
 
    /* 
@@ -242,5 +281,9 @@ public class Cliente : MonoBehaviour
     }
     public void jugar() {
         SceneManager.LoadScene("Juego");
+    }
+    public void inventarioTienda() {
+        //He intentado que abra la tienda ya loggeado pero resulta imposible hacer openUrl + post. O uno u otro pero los 2 juntos no se pueden.
+        Application.OpenURL("http://192.168.6.7:8000/login");
     }
 }
