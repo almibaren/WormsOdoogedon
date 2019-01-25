@@ -53,7 +53,7 @@ public class Cliente : MonoBehaviour
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
-        LoadServerConfig();
+        //LoadServerConfig();
     }
 
     public void Connect()
@@ -78,7 +78,7 @@ public class Cliente : MonoBehaviour
         HostTopology topo = new HostTopology(cc, MAX_CONNECTION);
 
         hostId = NetworkTransport.AddHost(topo, 0);
-        connectionId = NetworkTransport.Connect(hostId, serverIP, port, 0, out error);
+        connectionId = NetworkTransport.Connect(hostId, "127.0.0.1", port, 0, out error);
 
         connectionTime = Time.time;
         isConnected = true;
@@ -165,16 +165,16 @@ public class Cliente : MonoBehaviour
 
     }
 
-    private void LoadServerConfig() {
-        string filePath = Application.dataPath + "/Resources/ServerConfig.json";
-        Debug.Log(filePath);
-        if (File.Exists(filePath)) {
-            string dataAsJson = File.ReadAllText(filePath);
-            serverIP = dataAsJson;
-            Debug.Log(serverIP);
-        }
+    //private void LoadServerConfig() {
+    //    string filePath = Application.dataPath + "/Resources/ServerConfig.json";
+    //    Debug.Log(filePath);
+    //    if (File.Exists(filePath)) {
+    //        string dataAsJson = File.ReadAllText(filePath);
+    //        serverIP = dataAsJson;
+    //        Debug.Log(serverIP);
+    //    }
         
-    }
+    //}
 
     private void OnAskName(string[] data)
     {
