@@ -128,6 +128,12 @@ public class Servidor : MonoBehaviour
                     case "DER":
                         Send("DER|" + splitData[1], reliableChannel, clients);
                         break;
+                    case "IZQ":
+                        Send("IZQ|" + splitData[1], reliableChannel, clients);
+                        break;
+                    case "SAL":
+                        Send("SAL|" + splitData[1], reliableChannel, clients);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);

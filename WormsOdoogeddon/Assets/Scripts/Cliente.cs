@@ -146,7 +146,23 @@ public class Cliente : MonoBehaviour
                         break;
                     case "DER":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
-                            GameObject.FindObjectOfType<MovimientoGusano>().GetComponent<MovimientoGusano>().mover();
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().moverDerecha();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().moverDerecha();
+                        }
+                        break;
+                    case "IZQ":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().moverIzquierda();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().moverIzquierda();
+                        }
+                        break;
+                    case "SAL":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().saltar();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().saltar();
                         }
                         break;
 
@@ -161,11 +177,8 @@ public class Cliente : MonoBehaviour
                      break;*/
         }
         if (juego) {
-            if (posJ1.transform.position.z != -300 && posJ2.transform.position.z != -300) {
-                Debug.Log("HOLA");
-                if (!jugadoresCreados) { 
+            if (!jugadoresCreados) { 
                     SpawnPlayer();
-                }
             }
         }
     }
@@ -305,6 +318,11 @@ public class Cliente : MonoBehaviour
     public void mover(string direccion) {
         if (direccion.Equals("derecha")) {
             Send("DER|" + jugadorLocal.playerName, reliableChannel);
+        } else {
+            Send("IZQ|" + jugadorLocal.playerName, reliableChannel);
         }
+    }
+    public void saltar() {
+        Send("SAL|" + jugadorLocal.playerName, reliableChannel);
     }
 }
