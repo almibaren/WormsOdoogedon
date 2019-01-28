@@ -300,8 +300,10 @@ public class Cliente : MonoBehaviour
         jugadorRival.playerName = splitData[1];
         jugadorRival.connectId = int.Parse(splitData[2]);
     }
-    public void inventario() {
-        Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName,reliableChannel);
+    public void inventarioMenu() {
+        Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName, reliableChannel);
+        canvas2.SetActive(false);
+        canvas3.SetActive(true);
     }
     public void jugar() {
         SceneManager.LoadScene("Juego");
