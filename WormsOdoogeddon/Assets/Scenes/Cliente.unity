@@ -3110,7 +3110,7 @@ MonoBehaviour:
   canvas1: {fileID: 1751701800}
   canvas2: {fileID: 653823350}
   usuario: {fileID: 1285153402}
-  prefabGusano: {fileID: 1543231735234312, guid: ffef7cfe1c29f6a4db2afaba4b81cd49,
+  prefabGusano: {fileID: 1715778767523256, guid: 880db3bfe6171fa408e01adc448125b0,
     type: 2}
   posJ1: {fileID: 0}
   posJ2: {fileID: 0}

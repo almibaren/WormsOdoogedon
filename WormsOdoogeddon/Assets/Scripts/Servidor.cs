@@ -125,6 +125,9 @@ public class Servidor : MonoBehaviour
                     case "POS2":
                         Send("POS2|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
                         break;
+                    case "DER":
+                        Send("DER|" + splitData[1], reliableChannel, clients);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);

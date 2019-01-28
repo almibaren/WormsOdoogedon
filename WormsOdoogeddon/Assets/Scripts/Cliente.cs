@@ -144,6 +144,11 @@ public class Cliente : MonoBehaviour
                     case "SPAWN":
                         juego = true;
                         break;
+                    case "DER":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            GameObject.FindObjectOfType<MovimientoGusano>().GetComponent<MovimientoGusano>().mover();
+                        }
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
@@ -296,5 +301,10 @@ public class Cliente : MonoBehaviour
         posJ2 = new GameObject();
         posJ1.transform.position = new Vector3(0, 0, -300);
         posJ2.transform.position = new Vector3(0, 0, -300);
+    }
+    public void mover(string direccion) {
+        if (direccion.Equals("derecha")) {
+            Send("DER|" + jugadorLocal.playerName, reliableChannel);
+        }
     }
 }
