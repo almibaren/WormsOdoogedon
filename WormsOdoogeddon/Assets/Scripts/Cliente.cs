@@ -45,7 +45,7 @@ public class Cliente : MonoBehaviour
     public List<Player> jugadores = new List<Player>();
     public GameObject nombre, password,popup;
     private string user,passwd;
-    public GameObject canvas1, canvas2;
+    public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
     public GameObject prefabGusano, posJ1,posJ2;
     private bool juego = false, jugadoresCreados = false;
