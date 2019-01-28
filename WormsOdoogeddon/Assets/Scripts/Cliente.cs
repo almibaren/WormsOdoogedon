@@ -120,7 +120,7 @@ public class Cliente : MonoBehaviour
 
                     case "CNN":
                         Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
-                        if (splitData[2].Equals(connectionId)){
+                        if (splitData[1].Equals(user)){
                             rellenarCamposJugadorLocal(splitData);
                             Debug.Log(jugadorLocal.idUsuario +"aaa");
                         } else {
@@ -141,6 +141,9 @@ public class Cliente : MonoBehaviour
                     case "POS2":
                         posJ2.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
                         break;
+                    case "SPAWN":
+                        juego = true;
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
@@ -160,7 +163,6 @@ public class Cliente : MonoBehaviour
                 }
             }
         }
-
     }
     private void OnAskName(string[] data)
     {
@@ -189,7 +191,7 @@ public class Cliente : MonoBehaviour
     }
 
     private void Loggeado(int id, string player) {
-        if (id == -1)
+        if (id.Equals(-1))
         {
             popup.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
             popup.SetActive(true);
@@ -206,8 +208,9 @@ public class Cliente : MonoBehaviour
 
     }
 
-    public void setposJ1(GameObject posiJ1) {
+    public void setpos(GameObject posiJ1, GameObject posiJ2) {
         Send("POS1|" + posiJ1.transform.position.x + "|" + posiJ1.transform.position.y, reliableChannel);
+        Send("POS2|" + posiJ2.transform.position.x + "|" + posiJ2.transform.position.y, reliableChannel);
     }
     public void setposJ2(GameObject posiJ2) {
         Send("POS2|" + posiJ2.transform.position.x + "|" + posiJ2.transform.position.y, reliableChannel);
@@ -293,6 +296,5 @@ public class Cliente : MonoBehaviour
         posJ2 = new GameObject();
         posJ1.transform.position = new Vector3(0, 0, -300);
         posJ2.transform.position = new Vector3(0, 0, -300);
-        juego = true;
     }
 }

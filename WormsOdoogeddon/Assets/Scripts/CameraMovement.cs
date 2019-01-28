@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour {
     }
 
     void Update() {
-        Debug.Log("CAMERAMOVEMENT");
+
         if (Input.touchCount == 1) {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began) {
