@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-using System.IO;
+
 
 public class Player
 {
@@ -22,7 +22,6 @@ public class Cliente : MonoBehaviour
 {
 
     private const int MAX_CONNECTION = 100;
-    private  string serverIP;
     private int port = 5701;
 
     private int hostId;
@@ -53,7 +52,6 @@ public class Cliente : MonoBehaviour
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
-        //LoadServerConfig();
     }
 
     public void Connect()
@@ -164,18 +162,6 @@ public class Cliente : MonoBehaviour
         }
 
     }
-
-    //private void LoadServerConfig() {
-    //    string filePath = Application.dataPath + "/Resources/ServerConfig.json";
-    //    Debug.Log(filePath);
-    //    if (File.Exists(filePath)) {
-    //        string dataAsJson = File.ReadAllText(filePath);
-    //        serverIP = dataAsJson;
-    //        Debug.Log(serverIP);
-    //    }
-        
-    //}
-
     private void OnAskName(string[] data)
     {
         //Id del player
