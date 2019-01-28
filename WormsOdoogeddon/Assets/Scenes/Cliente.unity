@@ -1397,7 +1397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &653823351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2463,7 +2463,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.4236985, y: 0.27779153}
   m_AnchorMax: {x: 0.606603, y: 0.326}
-  m_AnchoredPosition: {x: 0.20493317, y: -3.399994}
+  m_AnchoredPosition: {x: 0.20493317, y: -3.4000015}
   m_SizeDelta: {x: -47.24, y: -8.45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1140119255
@@ -3110,7 +3110,7 @@ MonoBehaviour:
   canvas1: {fileID: 1751701800}
   canvas2: {fileID: 653823350}
   usuario: {fileID: 1285153402}
-  prefabGusano: {fileID: 1790658653398352, guid: a699c88717929a84c9cde8c647f54153,
+  prefabGusano: {fileID: 1543231735234312, guid: ffef7cfe1c29f6a4db2afaba4b81cd49,
     type: 2}
   posJ1: {fileID: 0}
   posJ2: {fileID: 0}
@@ -4053,7 +4053,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1751701801
 MonoBehaviour:
   m_ObjectHideFlags: 0
