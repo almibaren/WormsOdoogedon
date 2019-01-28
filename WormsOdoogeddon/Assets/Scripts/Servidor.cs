@@ -34,7 +34,8 @@ public class Servidor : MonoBehaviour
 
     private List<ServerClient> clients = new List<ServerClient>();
 
-    bool primerJugadoCreado = false, primerJugador = false;
+    bool primerJugadoCreado = false;
+    int cantidadJugadores = 0;
     GameObject posJ1;
 
     private void Start()
@@ -115,12 +116,10 @@ public class Servidor : MonoBehaviour
                         
                         break;
                     case "POS1":
-                        if (posJ1.transform.position.z == -300) {
-                            Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
-                            posJ1.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
-                        } else {
-                            Send("POS1|" + posJ1.transform.position.x + "|" + posJ1.transform.position.y, reliableChannel, clients);
-                            Send("POS2|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                        Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                        cantidadJugadores++;
+                        if (cantidadJugadores == 2) {
+                            Send("SPAWN|a", reliableChannel, clients);
                         }
                         break;
                     case "POS2":
@@ -207,22 +206,24 @@ public class Servidor : MonoBehaviour
             JSONObject f = new JSONObject(www.text);
             Debug.Log(f.ToString());
             if (f.ToString().Equals("[]")) {
-                jugador1 = new ServerClient();
-                jugador1.id = int.Parse(f[0]["id"].ToString());
-                jugador1.playerName = playerName;
-                jugador1.connectionId = cnnId;
-                Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
+                Debug.Log("no se que haces aqui");
+                
+                //Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             }else{
+                Debug.Log("se que haces aqui");
                 if (!primerJugadoCreado) {
+                    jugador1 = new ServerClient();
+                    jugador1.id = int.Parse(f[0]["id"].ToString());
+                    jugador1.playerName = playerName;
+                    jugador1.connectionId = cnnId;
                     Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
                 } else {
                     Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
                     Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
                 }
-
             }
             //Debug.Log(f[0]["id"].ToString());
-            primerJugador = true;
+            primerJugadoCreado = true;
         }
         else
         {          

@@ -5,17 +5,13 @@ using UnityEngine;
 public class Juego : MonoBehaviour {
 
     public GameObject posJ1, posJ2;
-    private Cliente ClienteScript;
+    private Cliente clienteScript;
 
 	// Use this for initialization
 	void Start () {
-        ClienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
-        ClienteScript.juegoEmpezado();
-        //if (ClienteScript.getposJ1().transform.position.z == -300) {
-            ClienteScript.setposJ1(posJ1);
-        /*} else {
-            ClienteScript.setposJ2(posJ2);
-        }*/
+        clienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
+        clienteScript.juegoEmpezado();
+        clienteScript.setpos(posJ1,posJ2);
         
     }
 
@@ -27,4 +23,8 @@ public class Juego : MonoBehaviour {
     void Update () {
 		
 	}
+
+    public void derecha() {
+        clienteScript.mover("derecha");
+    }
 }
