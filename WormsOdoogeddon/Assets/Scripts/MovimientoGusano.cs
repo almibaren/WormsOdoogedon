@@ -12,11 +12,10 @@ public class MovimientoGusano : MonoBehaviour {
 	void Start () {
         miTransform = this.transform;
         miRigibody = GetComponent<Rigidbody2D>();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
 	}
     public void moverDerecha() {
         miTransform.Translate(new Vector3(1, 0, 0) * velocidad * Time.deltaTime);

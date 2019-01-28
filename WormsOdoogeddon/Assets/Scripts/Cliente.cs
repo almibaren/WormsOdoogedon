@@ -220,7 +220,7 @@ public class Cliente : MonoBehaviour
         else {
             canvas1.SetActive(false);
             canvas2.SetActive(true);           
-            usuario.text = player.ToString();
+            usuario.text = jugadorLocal.playerName;
         }
 
 
@@ -246,9 +246,10 @@ public class Cliente : MonoBehaviour
             jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
         } else {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-            jugadorRival.avatar = Instantiate(prefabGusano, 
-                posJ1.transform.position, Quaternion.identity);
+            jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
         }
+        jugadorRival.avatar.transform.position = new Vector3(jugadorRival.avatar.transform.position.x, jugadorRival.avatar.transform.position.y, 0);
+        jugadorLocal.avatar.transform.position = new Vector3(jugadorLocal.avatar.transform.position.x, jugadorLocal.avatar.transform.position.y, 0);
         jugadoresCreados = true;
         Debug.Log("CREAR JUGADORES");
     }
