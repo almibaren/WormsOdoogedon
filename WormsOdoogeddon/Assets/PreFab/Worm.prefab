@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 70121822006357158}
   - component: {fileID: 50663849745647838}
   - component: {fileID: 114488926005717246}
+  - component: {fileID: 95169314909854690}
   m_Layer: 0
   m_Name: Worm
   m_TagString: Untagged
@@ -78,6 +79,24 @@ CapsuleCollider2D:
   m_Offset: {x: -0.02352223, y: 0.009685648}
   m_Size: {x: 0.15440106, y: 0.2677971}
   m_Direction: 0
+--- !u!95 &95169314909854690
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1061974170924816}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3de33cd15f14af94ab1d884dd3103078, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114488926005717246
 MonoBehaviour:
   m_ObjectHideFlags: 1

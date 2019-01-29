@@ -222,16 +222,16 @@ public class Servidor : MonoBehaviour
                 
                 //Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             }else{
-                Debug.Log("se que haces aqui");
+                Debug.Log(f.ToString());
                 if (!primerJugadoCreado) {
                     jugador1 = new ServerClient();
-                    jugador1.id = int.Parse(f[0]["id"].ToString());
+                    jugador1.id = int.Parse(f["id"].ToString());
                     jugador1.playerName = playerName;
                     jugador1.connectionId = cnnId;
-                    Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
+                    Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
                 } else {
                     Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
-                    Send("CNN|" + playerName + '|' + cnnId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
+                    Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
                 }
             }
             //Debug.Log(f[0]["id"].ToString());

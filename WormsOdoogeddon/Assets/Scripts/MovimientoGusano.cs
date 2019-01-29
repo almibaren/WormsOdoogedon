@@ -9,6 +9,7 @@ public class MovimientoGusano : MonoBehaviour {
     public int velocidad;
     float moveHorizontal, moveVertical;
     private SpriteRenderer sprite;
+    private Animator anim;
 
     // Use this for initialization
     void Start () {
@@ -17,6 +18,7 @@ public class MovimientoGusano : MonoBehaviour {
         moveHorizontal = 0;
         moveVertical = 0;
         sprite = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
 	
 	// Update is called once per frame
@@ -26,14 +28,17 @@ public class MovimientoGusano : MonoBehaviour {
         moveHorizontal = 10;
         velocidad = 100;
         sprite.flipX = true;
+        anim.SetBool("moviendo", true);
     }
     public void pararDeMover() {
         velocidad = 0;
+        anim.SetBool("moviendo", false);
     }
     public void moverIzquierda() {
         moveHorizontal= -10;
         velocidad = 100;
         sprite.flipX = false;
+        anim.SetBool("moviendo", true);
     }
     public void saltar() {
         moveVertical = 10;

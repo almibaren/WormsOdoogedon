@@ -27,11 +27,9 @@ public class Juego : MonoBehaviour {
 
     public void derecha() {
         clienteScript.mover("derecha");
-        Debug.Log("Funciona el boton derecha");
     }
     public void izquierda() {
         clienteScript.mover("izquierda");
-        Debug.Log("Funciona el boton izquierda");
     }
     public void salto() {
         clienteScript.saltar();
