@@ -7,23 +7,37 @@ public class MovimientoGusano : MonoBehaviour {
     private Transform miTransform;
     private Rigidbody2D miRigibody;
     public int velocidad;
+    float moveHorizontal, moveVertical;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         miTransform = this.transform;
         miRigibody = GetComponent<Rigidbody2D>();
+        moveHorizontal = 0;
+        moveVertical = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
 	}
     public void moverDerecha() {
-        miTransform.Translate(new Vector3(1, 0, 0) * velocidad * Time.deltaTime);
+        moveHorizontal = 10;
+        velocidad = 10;
     }
     public void moverIzquierda() {
-        miTransform.Translate(new Vector3(-1, 0, 0) * velocidad * Time.deltaTime);
+        moveHorizontal = -10;
+        velocidad = 10;
     }
     public void saltar() {
-        miRigibody.AddForce(new Vector2(1, 1) * velocidad);
+        moveVertical = 100;
+        velocidad = 10;
+    }
+
+    void FixedUpdate() {
+
+        Vector3 movement = new Vector2(moveHorizontal, moveVertical);
+
+        miRigibody.AddForce(movement * velocidad);
+        velocidad = 0;
     }
 }
