@@ -25,10 +25,6 @@ ExportedObj/
 *.opendb
 *.meta
 ServerConfig.json
-<<<<<<< HEAD
-
-=======
->>>>>>> parent of 9391765... Updated Server Reaching
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -40,4 +36,3 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-WormsOdoogeddon/Server/WormsOdoogeddon_Data/globalgamemanagers
