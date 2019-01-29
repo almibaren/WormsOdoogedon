@@ -131,7 +131,9 @@ public class Cliente : MonoBehaviour
 
                     case "DC":
                         break;
-
+                    case "INV":
+                        inventarioCargar(splitData[1],splitData[2], splitData[3], splitData[4], splitData[5]);
+                        break;
                     case "EMPEZAR":
                        
                         break;
@@ -332,6 +334,15 @@ public class Cliente : MonoBehaviour
         canvas2.SetActive(true);
         canvas3.SetActive(false);
         canvas4.SetActive(false);
+    }
+
+    public void inventarioCargar(string playername, string cnnid, string nombres, string rutas, string contador) {
+
+
+    }
+
+    public void salir() {
+        Application.Quit();
     }
 
 }
