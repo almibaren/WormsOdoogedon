@@ -2192,7 +2192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &780773426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3117,7 +3117,7 @@ MonoBehaviour:
   canvas3: {fileID: 780773425}
   canvas4: {fileID: 987619766}
   usuario: {fileID: 1285153402}
-  prefabGusano: {fileID: 1715778767523256, guid: 880db3bfe6171fa408e01adc448125b0,
+  prefabGusano: {fileID: 1061974170924816, guid: 65c12f0bc92a9e94593fd0cdda208f6e,
     type: 2}
   posJ1: {fileID: 0}
   posJ2: {fileID: 0}
@@ -4060,7 +4060,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1751701801
 MonoBehaviour:
   m_ObjectHideFlags: 0
