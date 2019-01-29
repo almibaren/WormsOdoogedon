@@ -328,4 +328,10 @@ public class Cliente : MonoBehaviour
     public void saltar() {
         Send("SAL|" + jugadorLocal.playerName, reliableChannel);
     }
+    public void volver() {
+        canvas2.SetActive(true);
+        canvas3.SetActive(false);
+        canvas4.SetActive(false);
+    }
+
 }
