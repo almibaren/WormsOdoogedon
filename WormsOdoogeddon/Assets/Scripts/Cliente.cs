@@ -160,6 +160,13 @@ public class Cliente : MonoBehaviour
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().moverIzquierda();
                         }
                         break;
+                    case "PAR":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().pararDeMover();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().pararDeMover();
+                        }
+                        break;
                     case "SAL":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().saltar();
@@ -329,6 +336,9 @@ public class Cliente : MonoBehaviour
     }
     public void saltar() {
         Send("SAL|" + jugadorLocal.playerName, reliableChannel);
+    }
+    public void parar() {
+        Send("PAR|" + jugadorLocal.playerName, reliableChannel);
     }
     public void volver() {
         canvas2.SetActive(true);

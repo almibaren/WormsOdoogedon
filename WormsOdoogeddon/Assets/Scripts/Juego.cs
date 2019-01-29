@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Juego : MonoBehaviour {
 
@@ -12,7 +14,7 @@ public class Juego : MonoBehaviour {
         clienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
         clienteScript.juegoEmpezado();
         clienteScript.setpos(posJ1,posJ2);
-        
+
     }
 
     private void Awake() {
@@ -21,16 +23,20 @@ public class Juego : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-		
 	}
 
     public void derecha() {
         clienteScript.mover("derecha");
+        Debug.Log("Funciona el boton derecha");
     }
     public void izquierda() {
         clienteScript.mover("izquierda");
+        Debug.Log("Funciona el boton izquierda");
     }
     public void salto() {
         clienteScript.saltar();
+    }
+    public void parar() {
+        clienteScript.parar();
     }
 }

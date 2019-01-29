@@ -25,12 +25,15 @@ public class MovimientoGusano : MonoBehaviour {
     public void moverDerecha() {
         moveHorizontal = 10;
         velocidad = 100;
-        sprite.flipX = false;
+        sprite.flipX = true;
+    }
+    public void pararDeMover() {
+        velocidad = 0;
     }
     public void moverIzquierda() {
         moveHorizontal= -10;
         velocidad = 100;
-        sprite.flipX = true;
+        sprite.flipX = false;
     }
     public void saltar() {
         moveVertical = 10;
@@ -42,6 +45,5 @@ public class MovimientoGusano : MonoBehaviour {
         Vector3 movement = new Vector2(moveHorizontal, moveVertical);
 
         miRigibody.AddForce(movement * velocidad);
-        velocidad = 0;
     }
 }

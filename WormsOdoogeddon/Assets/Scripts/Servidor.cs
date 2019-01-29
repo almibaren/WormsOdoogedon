@@ -131,6 +131,9 @@ public class Servidor : MonoBehaviour
                     case "IZQ":
                         Send("IZQ|" + splitData[1], reliableChannel, clients);
                         break;
+                    case "PAR":
+                        Send("PAR|" + splitData[1], reliableChannel, clients);
+                        break;
                     case "SAL":
                         Send("SAL|" + splitData[1], reliableChannel, clients);
                         break;

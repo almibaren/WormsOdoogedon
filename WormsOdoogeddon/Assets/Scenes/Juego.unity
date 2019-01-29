@@ -113,48 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &41189012
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -1.877
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1.78
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4636822766408134, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 65c12f0bc92a9e94593fd0cdda208f6e, type: 2}
-  m_IsPrefabAsset: 0
 --- !u!1 &300622366
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,9 +673,10 @@ GameObject:
   - component: {fileID: 1031072518}
   - component: {fileID: 1031072517}
   - component: {fileID: 1031072516}
+  - component: {fileID: 1031072519}
   m_Layer: 5
   m_Name: Izquierda
-  m_TagString: Untagged
+  m_TagString: Izquierda
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -779,29 +738,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1031072517}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1820818071}
-        m_MethodName: izquierda
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1031072517
@@ -838,6 +775,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1031072514}
   m_CullTransparentMesh: 0
+--- !u!114 &1031072519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1031072514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6862a373ff8ce841b4003264b2e945d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  juego: {fileID: 1820818071}
 --- !u!1 &1080231345
 GameObject:
   m_ObjectHideFlags: 0
@@ -952,9 +901,10 @@ GameObject:
   - component: {fileID: 1644893506}
   - component: {fileID: 1644893505}
   - component: {fileID: 1644893504}
+  - component: {fileID: 1644893507}
   m_Layer: 5
   m_Name: Derecha
-  m_TagString: Untagged
+  m_TagString: Derecha
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1016,18 +966,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1644893505}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1820818071}
-        m_MethodName: derecha
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1644893505
@@ -1064,6 +1003,18 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1644893502}
   m_CullTransparentMesh: 0
+--- !u!114 &1644893507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1644893502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6862a373ff8ce841b4003264b2e945d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  juego: {fileID: 1820818071}
 --- !u!1 &1820818070
 GameObject:
   m_ObjectHideFlags: 0
