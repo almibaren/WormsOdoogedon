@@ -43,7 +43,7 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-    public GameObject nombre, password,popup;
+    public GameObject nombre, password,errortxt,noObjeto,gorroPrefab;
     private string user,passwd;
     public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
@@ -57,13 +57,13 @@ public class Cliente : MonoBehaviour
     public void Connect()
     {
         
-        popup = GameObject.Find("Login").transform.Find("Panel").transform.Find("errorTxt").gameObject;
+        errortxt = GameObject.Find("Login").transform.Find("Panel").transform.Find("errorTxt").gameObject;
         user = nombre.GetComponent<InputField>().text;
         passwd = password.GetComponent<InputField>().text;
 
         if (user.Trim().Equals("") || passwd.Trim().Equals("")) {
-            popup.SetActive(true);
-            popup.transform.GetComponent<Text>().text="DEBES RELLENAR LOS CAMPOS";
+            errortxt.SetActive(true);
+            errortxt.transform.GetComponent<Text>().text="DEBES RELLENAR LOS CAMPOS";
             return;
         }
 
@@ -132,7 +132,13 @@ public class Cliente : MonoBehaviour
                     case "DC":
                         break;
                     case "INV":
-                        inventarioCargar(splitData[1],splitData[2], splitData[3], splitData[4], splitData[5]);
+                        if (int.Parse(splitData[3]) != -1) { 
+                            inventarioCargar(splitData[1], splitData[2], splitData[3], splitData[4], splitData[5]);
+                        }else{
+                            noObjeto.SetActive(true);
+                            noObjeto.transform.GetComponent<Text>().text = "No tiene ningun objeto comprado acceda a la tienda para comprar.";
+                        }
+                        
                         break;
                     case "EMPEZAR":
                        
@@ -220,8 +226,8 @@ public class Cliente : MonoBehaviour
     private void Loggeado(int id, string player) {
         if (id.Equals(-1))
         {
-            popup.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
-            popup.SetActive(true);
+            errortxt.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
+            errortxt.SetActive(true);
            // GameObject.Find("PopUp").Equals(EditorUtility.DisplayDialog("El usuario o la Contraseña no son correctos", "", "OK", ""));
             nombre.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
