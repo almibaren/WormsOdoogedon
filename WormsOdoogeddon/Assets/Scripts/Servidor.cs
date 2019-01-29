@@ -217,10 +217,8 @@ public class Servidor : MonoBehaviour
             
             JSONObject f = new JSONObject(www.text);
             Debug.Log(f.ToString());
-            if (f.ToString().Equals("[]")) {
-                Debug.Log("no se que haces aqui");
-                
-                //Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
+            if (f.ToString().Equals("0")) {
+                Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             }else{
                 Debug.Log(f.ToString());
                 if (!primerJugadoCreado) {
