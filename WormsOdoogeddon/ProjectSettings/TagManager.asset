@@ -9,6 +9,9 @@ TagManager:
   - posLejana
   - Arriba
   - Abajo
+  - Inventario
+  - Bala
+  - posCercana
   layers:
   - Default
   - TransparentFX

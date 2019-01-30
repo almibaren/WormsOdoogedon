@@ -47,8 +47,9 @@ public class Cliente : MonoBehaviour
     private string user,passwd;
     public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
-    public GameObject prefabGusano, posJ1,posJ2;
-    private bool juego = false, jugadoresCreados = false;
+    public GameObject prefabGusano, posJ1,posJ2,prefabBala;
+    private GameObject bala;
+    private bool juego = false, jugadoresCreados = false, balaCreada = false;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -192,6 +193,23 @@ public class Cliente : MonoBehaviour
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
+                        }
+                        break;
+                    case "DIS":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            if (!balaCreada) {
+                                bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
+                            } else {
+                                bala.transform.position = jugadorLocal.avatar.transform.position;
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo());
+                        } else {
+                            if (!balaCreada) {
+                                bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
+                            } else {
+                                bala.transform.position = jugadorRival.avatar.transform.position;
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo() * 5000);
                         }
                         break;
 
@@ -399,6 +417,7 @@ public class Cliente : MonoBehaviour
     }
 
     public void disparar() {
+        Send("DIS|" + jugadorLocal.playerName, reliableChannel);
     }
 
     public void apuntar(string direccion) {

@@ -2961,6 +2961,7 @@ MonoBehaviour:
     type: 2}
   posJ1: {fileID: 0}
   posJ2: {fileID: 0}
+  prefabBala: {fileID: 1406267145876712, guid: 3fb03a88d6913bb42a191507d30cb1c3, type: 2}
 --- !u!1 &1307010881
 GameObject:
   m_ObjectHideFlags: 0

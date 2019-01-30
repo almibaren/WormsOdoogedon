@@ -68,6 +68,10 @@ public class MovimientoGusano : MonoBehaviour {
         rotationPerSec = 20;
     }
 
+    public Vector3 getDireccionDisparo() {
+        return miTransform.FindChild("rotador").FindChild("posLejana").transform.position - miTransform.FindChild("rotador").FindChild("posCercano").transform.position;
+    }
+
     void FixedUpdate() {
 
         Vector3 movement = new Vector2(moveHorizontal, moveVertical);
