@@ -10,7 +10,8 @@ public class MovimientoGusano : MonoBehaviour {
     float moveHorizontal, moveVertical;
     private SpriteRenderer sprite,spritePuntoDeMira;
     private Animator anim;
-    private GameObject posLejana;
+    private GameObject posLejana,rotador,posCercana;
+    private float rotation, actualRotation, rotationPerSec;
 
     // Use this for initialization
     void Start () {
@@ -21,13 +22,20 @@ public class MovimientoGusano : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         spritePuntoDeMira = GameObject.FindGameObjectWithTag("posLejana").GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        rotador = this.transform.FindChild("rotador").gameObject;
+        rotation = 0;
+        actualRotation = 0;
+        rotationPerSec = 0;
         
     }
 	
 	// Update is called once per frame
 	void Update () {
+        rotation = rotationPerSec * Time.deltaTime;
+        actualRotation = rotador.transform.localRotation.eulerAngles.z;
+        rotador.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, actualRotation + rotation));
 
-	}
+    }
     public void moverDerecha() {
         miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled=false;
         moveHorizontal = 10;
@@ -39,6 +47,7 @@ public class MovimientoGusano : MonoBehaviour {
         miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled = true;
         velocidad = 0;
         anim.SetBool("moviendo", false);
+        rotationPerSec = 0;
     }
     public void moverIzquierda() {
         miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled = false;
@@ -53,10 +62,14 @@ public class MovimientoGusano : MonoBehaviour {
         velocidad = 500;
     }
     public void apuntarArriba() {
-
+        rotationPerSec = -20;
     }
     public void apuntarAbajo() {
+        rotationPerSec = 20;
+    }
 
+    public Vector3 getDireccionDisparo() {
+        return miTransform.FindChild("rotador").FindChild("posLejana").transform.position - miTransform.FindChild("rotador").FindChild("posCercano").transform.position;
     }
 
     void FixedUpdate() {

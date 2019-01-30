@@ -47,8 +47,9 @@ public class Cliente : MonoBehaviour
     private string user,passwd;
     public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
-    public GameObject prefabGusano, posJ1,posJ2;
-    private bool juego = false, jugadoresCreados = false;
+    public GameObject prefabGusano, posJ1,posJ2,prefabBala;
+    private GameObject bala;
+    private bool juego = false, jugadoresCreados = false, balaCreada = false;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -186,7 +187,6 @@ public class Cliente : MonoBehaviour
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
                         }
-                        Send("PAR|" + splitData[1], reliableChannel);
                         break;
                     case "ABA":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
@@ -194,7 +194,23 @@ public class Cliente : MonoBehaviour
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
                         }
-                        Send("PAR|" + splitData[1], reliableChannel);
+                        break;
+                    case "DIS":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            if (!balaCreada) {
+                                bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
+                            } else {
+                                bala.transform.position = jugadorLocal.avatar.transform.position;
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo());
+                        } else {
+                            if (!balaCreada) {
+                                bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
+                            } else {
+                                bala.transform.position = jugadorRival.avatar.transform.position;
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo() * 5000);
+                        }
                         break;
 
                     default:
@@ -377,14 +393,21 @@ public class Cliente : MonoBehaviour
         canvas4.SetActive(false);
     }
 
+
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
         string[] nombreGorro = nombres.Split('.');
         string[] rutaGorro = rutas.Split('.');
+        Transform inventario = GameObject.Find("Inventario").transform;
+        if (inventario == null) {
+            Debug.Log("INVENTARIO ES NULL");
+        }
         for (int i = 0; i < contador; i++) {
-            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity);
+            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity, inventario);
             gorroPrefab.SetActive(true);
-            //gorroPrefab.transform.GetComponent<Image>().sprite.Equals(rutaGorro[i]); 
-            //gorroPrefab.transform.GetComponent<Text>().text = nombreGorro[i];
+            // gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
+            Image imagenGorro = gorroPrefab.transform.GetComponentInChildren<Image>();
+            Sprite sprite = Resources.Load<Sprite>("Sprites/gorro2");
+            gorroPrefab.transform.GetComponentInChildren<Image>().sprite = sprite;
         }
 
     }
@@ -394,6 +417,7 @@ public class Cliente : MonoBehaviour
     }
 
     public void disparar() {
+        Send("DIS|" + jugadorLocal.playerName, reliableChannel);
     }
 
     public void apuntar(string direccion) {

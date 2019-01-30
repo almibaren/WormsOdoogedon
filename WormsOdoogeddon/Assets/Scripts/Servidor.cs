@@ -144,6 +144,9 @@ public class Servidor : MonoBehaviour
                     case "ABA":
                         Send("ABA|" + splitData[1], reliableChannel, clients);
                         break;
+                    case "DIS":
+                        Send("DIS|" + splitData[1], reliableChannel, clients);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
