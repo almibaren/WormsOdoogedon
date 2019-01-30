@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 212001189565541842}
   m_Layer: 0
   m_Name: posLejana
-  m_TagString: Untagged
+  m_TagString: posLejana
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,7 +99,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1061974170924816}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.877, y: 1.78, z: 0}
+  m_LocalPosition: {x: -4.9231687, y: 0.35002384, z: 0}
   m_LocalScale: {x: 2.3410597, y: 2.3410597, z: 2.3410597}
   m_Children:
   - {fileID: 4202557455565746}

@@ -8,8 +8,9 @@ public class MovimientoGusano : MonoBehaviour {
     private Rigidbody2D miRigibody;
     public int velocidad;
     float moveHorizontal, moveVertical;
-    private SpriteRenderer sprite;
+    private SpriteRenderer sprite,spritePuntoDeMira;
     private Animator anim;
+    private GameObject posLejana;
 
     // Use this for initialization
     void Start () {
@@ -18,29 +19,36 @@ public class MovimientoGusano : MonoBehaviour {
         moveHorizontal = 0;
         moveVertical = 0;
         sprite = GetComponent<SpriteRenderer>();
+        spritePuntoDeMira = GameObject.FindGameObjectWithTag("posLejana").GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
+
 	}
     public void moverDerecha() {
+        miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled=false;
         moveHorizontal = 10;
         velocidad = 30;
         sprite.flipX = true;
         anim.SetBool("moviendo", true);
     }
     public void pararDeMover() {
+        miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled = true;
         velocidad = 0;
         anim.SetBool("moviendo", false);
     }
     public void moverIzquierda() {
-        moveHorizontal= -10;
+        miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled = false;
+        moveHorizontal = -10;
         velocidad = 30;
         sprite.flipX = false;
         anim.SetBool("moviendo", true);
     }
     public void saltar() {
+        miTransform.FindChild("rotador").FindChild("posLejana").GetComponent<SpriteRenderer>().enabled = false;
         moveVertical = 10;
         velocidad = 500;
     }

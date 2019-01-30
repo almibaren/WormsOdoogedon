@@ -37,4 +37,7 @@ public class Juego : MonoBehaviour {
     public void parar() {
         clienteScript.parar();
     }
+    public void disparar() {
+        clienteScript.disparar();
+    }
 }

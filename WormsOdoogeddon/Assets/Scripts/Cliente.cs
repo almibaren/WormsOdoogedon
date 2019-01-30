@@ -371,4 +371,7 @@ public class Cliente : MonoBehaviour
         Application.Quit();
     }
 
+    public void disparar() {
+    }
+
 }
