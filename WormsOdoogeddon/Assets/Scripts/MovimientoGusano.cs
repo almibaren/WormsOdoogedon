@@ -52,6 +52,12 @@ public class MovimientoGusano : MonoBehaviour {
         moveVertical = 10;
         velocidad = 500;
     }
+    public void apuntarArriba() {
+
+    }
+    public void apuntarAbajo() {
+
+    }
 
     void FixedUpdate() {
 

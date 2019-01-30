@@ -180,6 +180,22 @@ public class Cliente : MonoBehaviour
                         }
                         Send("PAR|" + splitData[1], reliableChannel);
                         break;
+                    case "ARR":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
+                        }
+                        Send("PAR|" + splitData[1], reliableChannel);
+                        break;
+                    case "ABA":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
+                        } else {
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
+                        }
+                        Send("PAR|" + splitData[1], reliableChannel);
+                        break;
 
                     default:
                         Debug.Log("Mensaje Invalido" + msg);
@@ -378,6 +394,15 @@ public class Cliente : MonoBehaviour
     }
 
     public void disparar() {
+    }
+
+    public void apuntar(string direccion) {
+
+        if (direccion.Equals("arriba")) {
+            Send("ARR|" + jugadorLocal.playerName, reliableChannel);
+        }else if (direccion.Equals("abajo")) {
+            Send("ABA|" + jugadorLocal.playerName, reliableChannel);
+        }
     }
 
 }

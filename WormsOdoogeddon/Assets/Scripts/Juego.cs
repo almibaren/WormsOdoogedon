@@ -31,6 +31,12 @@ public class Juego : MonoBehaviour {
     public void izquierda() {
         clienteScript.mover("izquierda");
     }
+    public void arriba() {
+        clienteScript.apuntar("arriba");
+    }
+    public void abajo() {
+        clienteScript.apuntar("abajo");
+    }
     public void salto() {
         clienteScript.saltar();
     }

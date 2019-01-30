@@ -30,8 +30,12 @@ public class Boton : MonoBehaviour, IPointerDownHandler, IPointerClickHandler,
             juego.izquierda();
         } else if (this.tag.Equals("Derecha")) {
             juego.derecha();
+        } else if (this.tag.Equals("Arriba")) {
+            juego.arriba();
+        } else if (this.tag.Equals("Abajo")) {
+            juego.abajo();
         }
-        
+
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
