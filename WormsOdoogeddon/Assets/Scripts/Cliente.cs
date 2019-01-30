@@ -186,7 +186,6 @@ public class Cliente : MonoBehaviour
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
                         }
-                        Send("PAR|" + splitData[1], reliableChannel);
                         break;
                     case "ABA":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
@@ -194,7 +193,6 @@ public class Cliente : MonoBehaviour
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
                         }
-                        Send("PAR|" + splitData[1], reliableChannel);
                         break;
 
                     default:
