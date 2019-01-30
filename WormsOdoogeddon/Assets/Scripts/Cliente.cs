@@ -179,6 +179,7 @@ public class Cliente : MonoBehaviour
                         } else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().saltar();
                         }
+                        Send("PAR|" + splitData[1], reliableChannel);
                         break;
 
                     default:
@@ -244,6 +245,8 @@ public class Cliente : MonoBehaviour
     public void setpos(GameObject posiJ1, GameObject posiJ2) {
         Send("POS1|" + posiJ1.transform.position.x + "|" + posiJ1.transform.position.y, reliableChannel);
         Send("POS2|" + posiJ2.transform.position.x + "|" + posiJ2.transform.position.y, reliableChannel);
+        this.posJ1 = posiJ1;
+        this.posJ2 = posiJ2;
     }
     public void setposJ2(GameObject posiJ2) {
         Send("POS2|" + posiJ2.transform.position.x + "|" + posiJ2.transform.position.y, reliableChannel);
@@ -266,7 +269,18 @@ public class Cliente : MonoBehaviour
         jugadorRival.avatar.transform.position = new Vector3(jugadorRival.avatar.transform.position.x, jugadorRival.avatar.transform.position.y, 0);
         jugadorLocal.avatar.transform.position = new Vector3(jugadorLocal.avatar.transform.position.x, jugadorLocal.avatar.transform.position.y, 0);
         jugadoresCreados = true;
+        reposicionarJugadores();
         Debug.Log("CREAR JUGADORES");
+    }
+
+    private void reposicionarJugadores() {
+        if (jugadorLocal.connectId % 2 != 0) {
+            jugadorLocal.avatar.transform.position = posJ1.transform.position;
+            jugadorRival.avatar.transform.position = posJ2.transform.position;
+        } else {
+            jugadorLocal.avatar.transform.position = posJ2.transform.position;
+            jugadorRival.avatar.transform.position = posJ1.transform.position;
+        }
     }
 
    /* 
@@ -328,10 +342,6 @@ public class Cliente : MonoBehaviour
         Application.OpenURL("http://192.168.6.7:8000/login");
     }
     public void juegoEmpezado() {
-        posJ1 = new GameObject();
-        posJ2 = new GameObject();
-        posJ1.transform.position = new Vector3(0, 0, -300);
-        posJ2.transform.position = new Vector3(0, 0, -300);
     }
     public void mover(string direccion) {
         if (direccion.Equals("derecha")) {

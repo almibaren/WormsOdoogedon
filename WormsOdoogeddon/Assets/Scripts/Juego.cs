@@ -33,7 +33,6 @@ public class Juego : MonoBehaviour {
     }
     public void salto() {
         clienteScript.saltar();
-        clienteScript.parar();
     }
     public void parar() {
         clienteScript.parar();
