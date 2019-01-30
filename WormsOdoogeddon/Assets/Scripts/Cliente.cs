@@ -395,8 +395,10 @@ public class Cliente : MonoBehaviour
 
 
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
-        string[] nombreGorro = nombres.Split('.');
-        string[] rutaGorro = rutas.Split('.');
+        string[] nombreGorro = nombres.Split('_');
+        Debug.Log(nombreGorro);
+        string[] rutaGorro = rutas.Split('-');
+        Debug.Log(rutaGorro);
         Transform inventario = GameObject.Find("Inventario").transform;
         if (inventario == null) {
             Debug.Log("INVENTARIO ES NULL");
@@ -404,10 +406,13 @@ public class Cliente : MonoBehaviour
         for (int i = 0; i < contador; i++) {
             Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity, inventario);
             gorroPrefab.SetActive(true);
-            // gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
+            gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
             Image imagenGorro = gorroPrefab.transform.GetComponentInChildren<Image>();
-            Sprite sprite = Resources.Load<Sprite>("Sprites/gorro2");
-            gorroPrefab.transform.GetComponentInChildren<Image>().sprite = sprite;
+            if (imagenGorro==null) {
+                Debug.Log("GORRO ES NULL");
+            }
+            Sprite spriteR = Resources.Load<Sprite>("Sprites/gorro2");
+            imagenGorro.sprite = spriteR;
         }
 
     }
@@ -427,6 +432,16 @@ public class Cliente : MonoBehaviour
         }else if (direccion.Equals("abajo")) {
             Send("ABA|" + jugadorLocal.playerName, reliableChannel);
         }
+    }
+    private void desactivarBala() {
+        bala.GetComponent<Rigidbody2D>().gravityScale = 0;
+        bala.GetComponent<CircleCollider2D>().enabled = false;
+        Invoke("activarBala", 2);
+    }
+
+    private void activarBala() {
+        bala.GetComponent<Rigidbody2D>().gravityScale = 1;
+        bala.GetComponent<CircleCollider2D>().enabled = true;
     }
 
 }
