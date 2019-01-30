@@ -375,14 +375,21 @@ public class Cliente : MonoBehaviour
         canvas4.SetActive(false);
     }
 
+
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
         string[] nombreGorro = nombres.Split('.');
         string[] rutaGorro = rutas.Split('.');
+        Transform inventario = GameObject.Find("Inventario").transform;
+        if (inventario == null) {
+            Debug.Log("INVENTARIO ES NULL");
+        }
         for (int i = 0; i < contador; i++) {
-            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity);
+            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity, inventario);
             gorroPrefab.SetActive(true);
-            //gorroPrefab.transform.GetComponent<Image>().sprite.Equals(rutaGorro[i]); 
-            //gorroPrefab.transform.GetComponent<Text>().text = nombreGorro[i];
+            // gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
+            Image imagenGorro = gorroPrefab.transform.GetComponentInChildren<Image>();
+            Sprite sprite = Resources.Load<Sprite>("Sprites/gorro2");
+            gorroPrefab.transform.GetComponentInChildren<Image>().sprite = sprite;
         }
 
     }
