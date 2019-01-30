@@ -26,7 +26,7 @@ public class MovimientoGusano : MonoBehaviour {
 	}
     public void moverDerecha() {
         moveHorizontal = 10;
-        velocidad = 100;
+        velocidad = 30;
         sprite.flipX = true;
         anim.SetBool("moviendo", true);
     }
@@ -36,13 +36,13 @@ public class MovimientoGusano : MonoBehaviour {
     }
     public void moverIzquierda() {
         moveHorizontal= -10;
-        velocidad = 100;
+        velocidad = 30;
         sprite.flipX = false;
         anim.SetBool("moviendo", true);
     }
     public void saltar() {
         moveVertical = 10;
-        velocidad = 650;
+        velocidad = 500;
     }
 
     void FixedUpdate() {

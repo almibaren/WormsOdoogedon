@@ -228,7 +228,7 @@ public class Servidor : MonoBehaviour
                     jugador1.connectionId = cnnId;
                     Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
                 } else {
-                    Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + f[0]["id"].ToString(), reliableChannel, clients);
+                    Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + f["id"].ToString(), reliableChannel, clients);
                     Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
                 }
             }
