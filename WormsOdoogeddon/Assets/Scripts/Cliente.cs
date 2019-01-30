@@ -132,13 +132,12 @@ public class Cliente : MonoBehaviour
                     case "DC":
                         break;
                     case "INV":
-                        if (int.Parse(splitData[3]) != -1) { 
-                            inventarioCargar(splitData[1], splitData[2], splitData[3], splitData[4], splitData[5]);
-                        }else{
+                        if (splitData[3] != "-1") {
+                            inventarioCargar(splitData[1], int.Parse(splitData[2]), splitData[3], splitData[4], int.Parse(splitData[5]));
+                        } else {
                             noObjeto.SetActive(true);
                             noObjeto.transform.GetComponent<Text>().text = "No tiene ningun objeto comprado acceda a la tienda para comprar.";
                         }
-                        
                         break;
                     case "EMPEZAR":
                        
@@ -362,8 +361,15 @@ public class Cliente : MonoBehaviour
         canvas4.SetActive(false);
     }
 
-    public void inventarioCargar(string playername, string cnnid, string nombres, string rutas, string contador) {
-
+    public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
+        string[] nombreGorro = nombres.Split('.');
+        string[] rutaGorro = rutas.Split('.');
+        for (int i = 0; i < contador; i++) {
+            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity);
+            gorroPrefab.SetActive(true);
+            //gorroPrefab.transform.GetComponent<Image>().sprite.Equals(rutaGorro[i]); 
+            //gorroPrefab.transform.GetComponent<Text>().text = nombreGorro[i];
+        }
 
     }
 
