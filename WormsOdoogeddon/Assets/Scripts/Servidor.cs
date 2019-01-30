@@ -37,6 +37,7 @@ public class Servidor : MonoBehaviour
     bool primerJugadoCreado = false;
     int cantidadJugadores = 0;
     GameObject posJ1;
+    private SimpleAES simpleAES;
 
     private void Start()
     {
@@ -51,7 +52,7 @@ public class Servidor : MonoBehaviour
         HostTopology topo = new HostTopology(cc, MAX_CONNECTION);
         hostId = NetworkTransport.AddHost(topo, port, null);
         webHostId = NetworkTransport.AddWebsocketHost(topo, port, null);
-
+        simpleAES = new SimpleAES();
         isStarted = true;
 
         posJ1 = new GameObject();
@@ -193,7 +194,7 @@ public class Servidor : MonoBehaviour
     private void Send(string message, int channelId, List<ServerClient> c)
     {
         //Debug.Log("Sending: " + message);
-        byte[] msg = Encoding.Unicode.GetBytes(message);
+        byte[] msg = simpleAES.Encrypt(message);
         foreach (ServerClient sc in c)
         {
             NetworkTransport.Send(hostId, sc.connectionId, channelId, msg, message.Length * sizeof(char), out error);
