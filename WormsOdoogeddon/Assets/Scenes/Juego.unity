@@ -1722,6 +1722,12 @@ MonoBehaviour:
   posJ1: {fileID: 307137329}
   posJ2: {fileID: 1080231345}
   vidas: {fileID: 1425936637}
+  derechaBoton: {fileID: 1644893502}
+  izquierdaBoton: {fileID: 1031072514}
+  arribaBoton: {fileID: 1236213765}
+  abajoBoton: {fileID: 1699136603}
+  dispararBoton: {fileID: 4144564}
+  saltarBoton: {fileID: 733897596}
 --- !u!4 &1820818072
 Transform:
   m_ObjectHideFlags: 0

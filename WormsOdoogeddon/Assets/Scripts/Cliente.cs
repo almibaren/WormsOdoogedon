@@ -49,7 +49,7 @@ public class Cliente : MonoBehaviour
     public Text usuario;
     public GameObject prefabGusano, posJ1,posJ2,prefabBala;
     private GameObject bala;
-    private bool juego = false, jugadoresCreados = false, balaCreada = false;
+    private bool juego = false, jugadoresCreados = false, balaCreada = false, miTurno = false;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -153,6 +153,14 @@ public class Cliente : MonoBehaviour
                         break;
                     case "SPAWN":
                         juego = true;
+                        Debug.Log(jugadorLocal.connectId + "|" + jugadorRival.connectId);
+                        if (jugadorLocal.connectId < jugadorRival.connectId) {
+                            miTurno = true;
+                            GameObject.Find("Juego").GetComponent<Juego>().miTurno = true;
+                        }
+                        if (!miTurno) {
+                            bloquearFunciones();
+                        }
                         break;
                     case "DER":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
@@ -199,11 +207,9 @@ public class Cliente : MonoBehaviour
                         break;
                     case "DIS":
                         Vector3 direccion;
-                        float distancia=0,1;
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
-                                balaCreada = true;
                             } else {
                                 bala.transform.position = jugadorLocal.avatar.transform.position;
                             }
@@ -217,7 +223,6 @@ public class Cliente : MonoBehaviour
                         } else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
-                                balaCreada = true;
                             } else {
                                 bala.transform.position = jugadorRival.avatar.transform.position;
                             }
@@ -229,6 +234,7 @@ public class Cliente : MonoBehaviour
                             }
                             bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
                         }
+                        cambiarTurno();
                         break;
                     case "GOL":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
@@ -467,6 +473,18 @@ public class Cliente : MonoBehaviour
             Send("ARR|" + jugadorLocal.playerName, reliableChannel);
         }else if (direccion.Equals("abajo")) {
             Send("ABA|" + jugadorLocal.playerName, reliableChannel);
+        }
+    }
+    private void bloquearFunciones() {
+        GameObject.Find("Juego").GetComponent<Juego>().miTurno=false;
+    }
+    private void cambiarTurno() {
+        if (miTurno) {
+            miTurno = false;
+            bloquearFunciones();
+        } else {
+            miTurno = true;
+            GameObject.Find("Juego").GetComponent<Juego>().miTurno = true;
         }
     }
 }

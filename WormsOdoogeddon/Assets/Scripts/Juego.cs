@@ -9,9 +9,10 @@ public class Juego : MonoBehaviour {
     public GameObject posJ1, posJ2;
     private Cliente clienteScript;
     public Text vidas;
+    public bool miTurno = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         clienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
         clienteScript.juegoEmpezado();
         clienteScript.setpos(posJ1,posJ2);
@@ -27,25 +28,39 @@ public class Juego : MonoBehaviour {
 	}
 
     public void derecha() {
-        clienteScript.mover("derecha");
+        if (miTurno) {
+            clienteScript.mover("derecha");
+        }
     }
     public void izquierda() {
-        clienteScript.mover("izquierda");
+        if (miTurno) {
+            clienteScript.mover("izquierda");
+        }
     }
     public void arriba() {
-        clienteScript.apuntar("arriba");
+        if (miTurno) {
+            clienteScript.apuntar("arriba");
+        }
     }
     public void abajo() {
-        clienteScript.apuntar("abajo");
+        if (miTurno) {
+            clienteScript.apuntar("abajo");
+        }
     }
     public void salto() {
-        clienteScript.saltar();
+        if (miTurno) {
+            clienteScript.saltar();
+        }
     }
     public void parar() {
-        clienteScript.parar();
+        if (miTurno) {
+            clienteScript.parar();
+        }
     }
     public void disparar() {
-        clienteScript.disparar();
+        if (miTurno) {
+            clienteScript.disparar();
+        }
     }
     public void cambiarVidas(int vida) {
         vidas.text = vida + " ";
