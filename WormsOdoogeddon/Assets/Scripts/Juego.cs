@@ -8,6 +8,7 @@ public class Juego : MonoBehaviour {
 
     public GameObject posJ1, posJ2;
     private Cliente clienteScript;
+    public Text vidas;
 
 	// Use this for initialization
 	void Start () {
@@ -45,5 +46,11 @@ public class Juego : MonoBehaviour {
     }
     public void disparar() {
         clienteScript.disparar();
+    }
+    public void cambiarVidas(int vida) {
+        vidas.text = vida + " ";
+    }
+    public void jugadorPierde(string playerName) {
+        vidas.text = playerName;
     }
 }

@@ -12,6 +12,8 @@ public class MovimientoGusano : MonoBehaviour {
     private Animator anim;
     private GameObject posLejana,rotador,posCercana;
     private float rotation, actualRotation, rotationPerSec;
+    public bool golpeado;
+    public int vida;
 
     // Use this for initialization
     void Start () {
@@ -26,15 +28,22 @@ public class MovimientoGusano : MonoBehaviour {
         rotation = 0;
         actualRotation = 0;
         rotationPerSec = 0;
+        golpeado = false;
+        vida = 3;
         
     }
-	
-	// Update is called once per frame
-	void Update () {
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.transform.tag.Equals("Bala")) {
+            Debug.Log("Golpeado");
+            golpeado = true;
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
         rotation = rotationPerSec * Time.deltaTime;
         actualRotation = rotador.transform.localRotation.eulerAngles.z;
         rotador.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, actualRotation + rotation));
-
     }
     public void moverDerecha() {
         miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled=false;

@@ -35,7 +35,7 @@ public class Cliente : MonoBehaviour
     private int connectionId;
     private bool isConnected;
     private bool isStarted = false;
-    private SimpleAES simpleAES;
+    //private SimpleAES simpleAES;
     private byte error;
 
     //el nombre del usuario
@@ -109,9 +109,9 @@ public class Cliente : MonoBehaviour
                 break;*/
 
             case NetworkEventType.DataEvent:
-                string msg = simpleAES.Decrypt(recBuffer);
+                //string msg = simpleAES.Decrypt(recBuffer);
 
-                //string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
+                string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
                 //Debug.Log("receiving: " + msg);
                 string[] splitData = msg.Split('|');
                 Debug.Log("dato del case " + splitData[0] + " segundo valor " + splitData[1]);
@@ -199,9 +199,11 @@ public class Cliente : MonoBehaviour
                         break;
                     case "DIS":
                         Vector3 direccion;
+                        float distancia=0,1;
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
+                                balaCreada = true;
                             } else {
                                 bala.transform.position = jugadorLocal.avatar.transform.position;
                             }
@@ -211,10 +213,11 @@ public class Cliente : MonoBehaviour
                             } else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
                         } else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
+                                balaCreada = true;
                             } else {
                                 bala.transform.position = jugadorRival.avatar.transform.position;
                             }
@@ -224,7 +227,20 @@ public class Cliente : MonoBehaviour
                             } else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
+                        }
+                        break;
+                    case "GOL":
+                        if (jugadorLocal.playerName.Equals(splitData[1])) {
+                            jugadorRival.avatar.transform.position=new Vector3(0,3,0);
+                            jugadorRival.avatar.GetComponent<MovimientoGusano>().vida = jugadorRival.avatar.GetComponent<MovimientoGusano>().vida - 1;
+                            if (jugadorRival.avatar.GetComponent<MovimientoGusano>().vida == 0) {
+                                GameObject.Find("Juego").GetComponent<Juego>().jugadorPierde(jugadorRival.playerName);
+                            } else {
+                                GameObject.Find("Juego").GetComponent<Juego>().cambiarVidas(jugadorRival.avatar.GetComponent<MovimientoGusano>().vida);
+                            }
+                        } else {
+                            jugadorLocal.avatar.transform.position = new Vector3(0, 3, 0);
                         }
                         break;
 
@@ -242,7 +258,12 @@ public class Cliente : MonoBehaviour
             if (!jugadoresCreados) { 
                     SpawnPlayer();
             }
+            if (jugadorRival.avatar.GetComponent<MovimientoGusano>().golpeado == true) {
+                Send("GOL|" + jugadorLocal.playerName, reliableChannel);
+                jugadorRival.avatar.GetComponent<MovimientoGusano>().golpeado = false;
+            }
         }
+        
     }
     private void OnAskName(string[] data)
     {

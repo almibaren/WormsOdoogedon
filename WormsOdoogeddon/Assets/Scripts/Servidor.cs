@@ -151,6 +151,9 @@ public class Servidor : MonoBehaviour
                     case "DIS":
                         Send("DIS|" + splitData[1], reliableChannel, clients);
                         break;
+                    case "GOL":
+                        Send("GOL|" + splitData[1], reliableChannel, clients);
+                        break;
 
                     default:
                         ToLog("Mensaje Invalido" + msg);
@@ -201,9 +204,9 @@ public class Servidor : MonoBehaviour
     private void Send(string message, int channelId, List<ServerClient> c)
     {
         //Debug.Log("Sending: " + message);
-        byte[] msg = simpleAES.Encrypt(message);
+        //byte[] msg = simpleAES.Encrypt(message);
         //ToLog("Sending: " + message);
-        //byte[] msg = Encoding.Unicode.GetBytes(message);
+        byte[] msg = Encoding.Unicode.GetBytes(message);
         foreach (ServerClient sc in c)
         {
             NetworkTransport.Send(hostId, sc.connectionId, channelId, msg, message.Length * sizeof(char), out error);
