@@ -35,7 +35,7 @@ public class Cliente : MonoBehaviour
     private int connectionId;
     private bool isConnected;
     private bool isStarted = false;
-
+    private SimpleAES simpleAES;
     private byte error;
 
     //el nombre del usuario
@@ -109,7 +109,9 @@ public class Cliente : MonoBehaviour
                 break;*/
 
             case NetworkEventType.DataEvent:
-                string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
+                string msg = simpleAES.Decrypt(recBuffer);
+
+                //string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
                 //Debug.Log("receiving: " + msg);
                 string[] splitData = msg.Split('|');
                 Debug.Log("dato del case " + splitData[0] + " segundo valor " + splitData[1]);
