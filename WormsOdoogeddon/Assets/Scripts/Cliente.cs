@@ -441,20 +441,21 @@ public class Cliente : MonoBehaviour
         Debug.Log(nombreGorro);
         string[] rutaGorro = rutas.Split('-');
         Debug.Log(rutaGorro);
-        Transform inventario = GameObject.Find("Inventario").transform;
+        Transform inventario = GameObject.Find("Inventario").transform.Find("Panel");
         if (inventario == null) {
             Debug.Log("INVENTARIO ES NULL");
         }
         for (int i = 0; i < contador; i++) {
-            Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity, inventario);
+            Instantiate(gorroPrefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             gorroPrefab.SetActive(true);
-            gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
-            Image imagenGorro = gorroPrefab.transform.GetComponentInChildren<Image>();
-            if (imagenGorro==null) {
+            gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i].ToString();
+            Transform imagenGorro = gorroPrefab.transform.Find("Image");
+            Debug.Log(imagenGorro.ToString());
+            if (imagenGorro == null) {
                 Debug.Log("GORRO ES NULL");
             }
-            Sprite spriteR = Resources.Load<Sprite>("Sprites/gorro2");
-            imagenGorro.sprite = spriteR;
+            Sprite spriteR = Resources.Load<Sprite>("Sprites/gorro2"/*+rutas[i].ToString()*/);
+            imagenGorro.GetComponent<SpriteRenderer>().sprite = spriteR;
         }
 
     }

@@ -2950,7 +2950,7 @@ MonoBehaviour:
   password: {fileID: 1526084475}
   errortxt: {fileID: 0}
   noObjeto: {fileID: 681140105}
-  gorroPrefab: {fileID: 1702096352523114, guid: 8779157773d64d448a213e3d14b29497,
+  gorroPrefab: {fileID: 1938476089904964, guid: 8779157773d64d448a213e3d14b29497,
     type: 2}
   canvas1: {fileID: 1751701800}
   canvas2: {fileID: 653823350}
