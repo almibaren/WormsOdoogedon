@@ -196,20 +196,33 @@ public class Cliente : MonoBehaviour
                         }
                         break;
                     case "DIS":
+                        Vector3 direccion;
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
                             } else {
                                 bala.transform.position = jugadorLocal.avatar.transform.position;
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo());
+                            direccion = jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
+                            if (direccion.x > 0) {
+                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y, 0);
+                            } else {
+                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
                         } else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
                             } else {
                                 bala.transform.position = jugadorRival.avatar.transform.position;
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo() * 5000);
+                            direccion = jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
+                            if (direccion.x > 0) {
+                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y,0);
+                            } else {
+                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
                         }
                         break;
 
@@ -433,15 +446,4 @@ public class Cliente : MonoBehaviour
             Send("ABA|" + jugadorLocal.playerName, reliableChannel);
         }
     }
-    private void desactivarBala() {
-        bala.GetComponent<Rigidbody2D>().gravityScale = 0;
-        bala.GetComponent<CircleCollider2D>().enabled = false;
-        Invoke("activarBala", 2);
-    }
-
-    private void activarBala() {
-        bala.GetComponent<Rigidbody2D>().gravityScale = 1;
-        bala.GetComponent<CircleCollider2D>().enabled = true;
-    }
-
 }
