@@ -198,20 +198,33 @@ public class Cliente : MonoBehaviour
                         }
                         break;
                     case "DIS":
+                        Vector3 direccion;
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
                             } else {
                                 bala.transform.position = jugadorLocal.avatar.transform.position;
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo());
+                            direccion = jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
+                            if (direccion.x > 0) {
+                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y, 0);
+                            } else {
+                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
                         } else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
                             } else {
                                 bala.transform.position = jugadorRival.avatar.transform.position;
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo() * 5000);
+                            direccion = jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
+                            if (direccion.x > 0) {
+                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y,0);
+                            } else {
+                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                            }
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 50);
                         }
                         break;
 
@@ -397,8 +410,10 @@ public class Cliente : MonoBehaviour
 
 
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
-        string[] nombreGorro = nombres.Split('.');
-        string[] rutaGorro = rutas.Split('.');
+        string[] nombreGorro = nombres.Split('_');
+        Debug.Log(nombreGorro);
+        string[] rutaGorro = rutas.Split('-');
+        Debug.Log(rutaGorro);
         Transform inventario = GameObject.Find("Inventario").transform;
         if (inventario == null) {
             Debug.Log("INVENTARIO ES NULL");
@@ -406,10 +421,13 @@ public class Cliente : MonoBehaviour
         for (int i = 0; i < contador; i++) {
             Instantiate(gorroPrefab, new Vector2(i, i), Quaternion.identity, inventario);
             gorroPrefab.SetActive(true);
-            // gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
+            gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i];
             Image imagenGorro = gorroPrefab.transform.GetComponentInChildren<Image>();
-            Sprite sprite = Resources.Load<Sprite>("Sprites/gorro2");
-            gorroPrefab.transform.GetComponentInChildren<Image>().sprite = sprite;
+            if (imagenGorro==null) {
+                Debug.Log("GORRO ES NULL");
+            }
+            Sprite spriteR = Resources.Load<Sprite>("Sprites/gorro2");
+            imagenGorro.sprite = spriteR;
         }
 
     }
@@ -430,5 +448,4 @@ public class Cliente : MonoBehaviour
             Send("ABA|" + jugadorLocal.playerName, reliableChannel);
         }
     }
-
 }

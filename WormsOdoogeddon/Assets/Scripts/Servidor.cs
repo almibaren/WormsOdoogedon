@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 
 //Clase para los clientes
@@ -27,6 +28,9 @@ public class Servidor : MonoBehaviour
 
     private int reliableChannel;
     private int unReliableChannel;
+
+    public GameObject LoggingText;
+    private int logCounter = 0;
 
     private bool isStarted = false;
     private byte error;
@@ -58,7 +62,7 @@ public class Servidor : MonoBehaviour
         posJ1 = new GameObject();
         posJ1.transform.position = new Vector3(0, 0, -300);
 
-        //Debug.Log("Arranacado");
+        //ToLog("Arranacado");
 
     }
 
@@ -86,13 +90,13 @@ public class Servidor : MonoBehaviour
                 break;
 
             case NetworkEventType.ConnectEvent:
-                //Debug.Log("Player" + connectionId + "Se ha conectado");
+                //ToLog("Player" + connectionId + "Se ha conectado");
                 OnConnection(connectionId);
                 break;
 
             case NetworkEventType.DataEvent:
                 string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                Debug.Log("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msg);
+                ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msg);
                 string[] splitData = msg.Split('|');
                 switch (splitData[0])
                 {
@@ -108,7 +112,7 @@ public class Servidor : MonoBehaviour
                         break;
 
                     case "EMPEZAR":
-                        //Debug.Log("EMPEZAR" + msg);
+                        //ToLog("EMPEZAR" + msg);
                         Send("EMPEZAR|", reliableChannel, clients);
                         break;
 
@@ -149,14 +153,14 @@ public class Servidor : MonoBehaviour
                         break;
 
                     default:
-                        Debug.Log("Mensaje Invalido" + msg);
+                        ToLog("Mensaje Invalido" + msg);
                         break;
 
                 }
                 break;
 
             case NetworkEventType.DisconnectEvent:
-                //Debug.Log("Player" + connectionId + "Se ha desconectado");
+                //ToLog("Player" + connectionId + "Se ha desconectado");
                 break;
         }
 
@@ -181,7 +185,7 @@ public class Servidor : MonoBehaviour
 
         msg = msg.Trim('|');
         //ejemplo de linea de envio --> ASKNAME|1|ANDER%1|
-        //Debug.Log("enviado a clientes"+msg);
+        //ToLog("enviado a clientes"+msg);
         Send(msg, reliableChannel, cnnId);
 
     }
@@ -190,7 +194,7 @@ public class Servidor : MonoBehaviour
     {
         List<ServerClient> c = new List<ServerClient>();
         c.Add(clients.Find(x => x.connectionId == cnnId));
-        //Debug.Log("-----------------------enviado---------------------------");
+        //ToLog("-----------------------enviado---------------------------");
         Send(message, channelId, c);
     }
 
@@ -198,10 +202,12 @@ public class Servidor : MonoBehaviour
     {
         //Debug.Log("Sending: " + message);
         byte[] msg = simpleAES.Encrypt(message);
+        //ToLog("Sending: " + message);
+        //byte[] msg = Encoding.Unicode.GetBytes(message);
         foreach (ServerClient sc in c)
         {
             NetworkTransport.Send(hostId, sc.connectionId, channelId, msg, message.Length * sizeof(char), out error);
-            //Debug.Log("-enviado2-"+message);
+            //ToLog("-enviado2-"+message);
         }
     }
 
@@ -216,7 +222,7 @@ public class Servidor : MonoBehaviour
         StartCoroutine(WaitForWWW(www, cnnId, playerName));
         
         //Enviar a los demas clientes el jugador conectado
-        //Debug.Log("Nuevo jugador" + playerName + "Se ha unido a la partida");
+        //ToLog("Nuevo jugador" + playerName + "Se ha unido a la partida");
     }
 
     private IEnumerator WaitForWWW(WWW www, int cnnId, string playerName)
@@ -226,11 +232,11 @@ public class Servidor : MonoBehaviour
         if (string.IsNullOrEmpty(www.error)) {
             
             JSONObject f = new JSONObject(www.text);
-            Debug.Log(f.ToString());
+            ToLog(f.ToString());
             if (f.ToString().Equals("0")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             }else{
-                Debug.Log(f.ToString());
+                ToLog(f.ToString());
                 if (!primerJugadoCreado) {
                     jugador1 = new ServerClient();
                     jugador1.id = int.Parse(f["id"].ToString());
@@ -242,12 +248,12 @@ public class Servidor : MonoBehaviour
                     Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
                 }
             }
-            //Debug.Log(f[0]["id"].ToString());
+            //ToLog(f[0]["id"].ToString());
             primerJugadoCreado = true;
         }
         else
         {          
-            Debug.Log(www.error);
+            ToLog(www.error);
         }
     }
     private void inventario(int idUsuario, int cnnId, string playerName) {
@@ -264,15 +270,17 @@ public class Servidor : MonoBehaviour
 
         if (string.IsNullOrEmpty(www.error)) {
             JSONObject f = new JSONObject(www.text);
-            Debug.Log(f.ToString());
+            ToLog(f.ToString());
             String nombres="", rutas="";
             bool datos = true;
             int contador=0;
             while (datos) {
                
                 try {
-                    nombres = nombres + f[contador]["nombre"] + ".";
-                    rutas = rutas + f[contador]["imagen"].ToString().Split('/')[1] + ".";
+                    nombres = nombres + f[contador]["nombre"] + "_";
+                    ToLog(nombres);
+                    rutas = rutas + f[contador]["imagen"].ToString().Split('/')[1] + "-";
+                    ToLog(rutas);
                     contador++;
                     if (f[contador].Equals("")) {
                         datos = false;
@@ -281,15 +289,25 @@ public class Servidor : MonoBehaviour
                     datos = false;
                 }
             }
-            Debug.Log(nombres + "|" + contador + "|" + rutas);
+
+            //ToLog(nombres + "|" + contador + "|" + rutas);
             if (f.ToString().Equals("[]")) {
                 Send("INV|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
             } else {
                 Send("INV|" + playerName + '|' + cnnId + '|' + nombres + "|" + rutas + "|" + contador, reliableChannel, clients);
             }
-            //Debug.Log(f[0]["id"].ToString());
+            //ToLog(f[0]["id"].ToString());
         } else {
-            Debug.Log(www.error);
+            ToLog(www.error);
+        }
+    }
+    private void ToLog(string msg) {
+        if (logCounter >= 18) {
+            LoggingText.GetComponent<Text>().text = msg;
+            logCounter = 1;
+        } else {
+            LoggingText.GetComponent<Text>().text = LoggingText.GetComponent<Text>().text + "\n" + msg;
+            logCounter++;
         }
     }
 }
