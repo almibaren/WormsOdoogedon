@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEditor;
-
+using System;
 
 public class Player
 {
@@ -20,6 +20,7 @@ public class Player
 
 public class Cliente : MonoBehaviour
 {
+    private SimpleAES simpleAES;
 
     private const int MAX_CONNECTION = 100;
     private int port = 5701;
@@ -81,6 +82,7 @@ public class Cliente : MonoBehaviour
 
         connectionTime = Time.time;
         isConnected = true;
+        simpleAES = new SimpleAES();
         
 
     }
@@ -109,12 +111,13 @@ public class Cliente : MonoBehaviour
                 break;*/
 
             case NetworkEventType.DataEvent:
-                //string msg = simpleAES.Decrypt(recBuffer);
+                byte[] msgToDecrypt = new byte[dataSize];
+                Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
+                string msg = simpleAES.Decrypt(msgToDecrypt);
 
-                string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                //Debug.Log("receiving: " + msg);
+                string msgd = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
+                Debug.Log("receiving: " + msg + "\n from " + msgd);
                 string[] splitData = msg.Split('|');
-                Debug.Log("dato del case " + splitData[0] + " segundo valor " + splitData[1]);
                 switch (splitData[0])
                 {
                     case "ASKNAME":
@@ -275,24 +278,16 @@ public class Cliente : MonoBehaviour
     {
         //Id del player
         ourClientId = int.Parse(data[1]);
-
         //Enviar el nombre al servidor
-   
         Send("NAMEIS|" + user +"|" + passwd, reliableChannel);
-
-        //enviar datos al resto de jugadores
-        for (int i = 2; i < data.Length - 1; i++)
-        {
-            string[] d = data[i].Split('%');
-          /*  SpawnPlayer(d[0], int.Parse(d[1]));*/
-        }
 
     }
 
     private void Send(string message, int channelId)
     {
-        //Debug.Log("Sending: " + message);
-        byte[] msg = Encoding.Unicode.GetBytes(message);
+        Debug.Log("Sending: " + message);
+        //byte[] msg = Encoding.Unicode.GetBytes(message);
+        byte[] msg = simpleAES.Encrypt(message);
         NetworkTransport.Send(hostId, connectionId, channelId, msg, message.Length * sizeof(char), out error);
 
     }

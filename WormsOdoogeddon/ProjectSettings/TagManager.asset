@@ -12,6 +12,7 @@ TagManager:
   - Inventario
   - Bala
   - posCercana
+  - Mapa
   layers:
   - Default
   - TransparentFX
