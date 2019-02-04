@@ -43,7 +43,7 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-    public GameObject nombre, password,errortxt,noObjeto,gorroPrefab;
+    public GameObject nombre, password,errortxt,noObjeto,gorro2Prefab, gorrete2Prefab, gorrete3Prefab, pruebita1Prefab;
     private string user,passwd;
     public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
@@ -430,6 +430,7 @@ public class Cliente : MonoBehaviour
         Send("PAR|" + jugadorLocal.playerName, reliableChannel);
     }
     public void volver() {
+        Debug.Log("*^*^*^*^*^*^*^*^*^*^*^*^*^*");
         canvas2.SetActive(true);
         canvas3.SetActive(false);
         canvas4.SetActive(false);
@@ -437,27 +438,24 @@ public class Cliente : MonoBehaviour
 
 
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
-        string[] nombreGorro = nombres.Split('_');
-        Debug.Log(nombreGorro);
-        string[] rutaGorro = rutas.Split('-');
-        Debug.Log(rutaGorro);
+        string[] nombreGorro = nombres.Replace('"',' ').Trim().Split('_');
+        string[] rutaGorro = rutas.Replace('"', ' ').Trim().Split('-');
         Transform inventario = GameObject.Find("Inventario").transform.Find("Panel");
         if (inventario == null) {
             Debug.Log("INVENTARIO ES NULL");
         }
         for (int i = 0; i < contador; i++) {
-            Instantiate(gorroPrefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
-            gorroPrefab.SetActive(true);
-            gorroPrefab.transform.GetComponentInChildren<Text>().text = nombreGorro[i].ToString();
-            Transform imagenGorro = gorroPrefab.transform.Find("Image");
-            Debug.Log(imagenGorro.ToString());
-            if (imagenGorro == null) {
-                Debug.Log("GORRO ES NULL");
+            Debug.Log(nombreGorro[i]);
+            if (nombreGorro[i].Trim().Equals("gorro2")) {
+              Instantiate(gorro2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+            }else if (nombreGorro[i].Trim().Equals("gorrete2")) {
+              Instantiate(gorrete2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+            } else if (nombreGorro[i].Trim().Equals("gorrete3")) {
+              Instantiate(gorrete3Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+            } else if (nombreGorro[i].Trim().Equals("pruebita1")) {
+              Instantiate(pruebita1Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             }
-            Sprite spriteR = Resources.Load<Sprite>("Sprites/gorro2"/*+rutas[i].ToString()*/);
-            imagenGorro.GetComponent<SpriteRenderer>().sprite = spriteR;
         }
-
     }
 
     public void salir() {
