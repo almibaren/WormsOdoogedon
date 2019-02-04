@@ -8,8 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using System;
 
-public class Player
-{
+public class Player {
     public string playerName;
     public int posJugador;
     public GameObject avatar;
@@ -18,8 +17,7 @@ public class Player
 }
 
 
-public class Cliente : MonoBehaviour
-{
+public class Cliente : MonoBehaviour {
     private SimpleAES simpleAES;
 
     private const int MAX_CONNECTION = 100;
@@ -44,28 +42,29 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-    public GameObject nombre, password,errortxt,noObjeto,gorroPrefab;
-    private string user,passwd;
-    public GameObject canvas1, canvas2,canvas3,canvas4;
-    public Text usuario;
-    public GameObject prefabGusano, posJ1,posJ2,prefabBala;
+    public GameObject nombre, password, errortxt, noObjeto, gorroPrefab, passwordAju, rePasswordAju;
+    private string user, passwd;
+    public GameObject canvas1, canvas2, canvas3, canvas4, panelChangePassword, errorPassAju;
+    public Text usuario, ajustesName, ajustesLastName, ajustesEmail;
+    public GameObject prefabGusano, posJ1, posJ2, prefabBala;
     private GameObject bala;
     private bool juego = false, jugadoresCreados = false, balaCreada = false, miTurno = false;
+    public Toggle toogleAjustes;
+    public InputField passwordAjuInput;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
     }
 
-    public void Connect()
-    {
-        
+    public void Connect() {
+
         errortxt = GameObject.Find("Login").transform.Find("Panel").transform.Find("errorTxt").gameObject;
         user = nombre.GetComponent<InputField>().text;
         passwd = password.GetComponent<InputField>().text;
 
         if (user.Trim().Equals("") || passwd.Trim().Equals("")) {
             errortxt.SetActive(true);
-            errortxt.transform.GetComponent<Text>().text="DEBES RELLENAR LOS CAMPOS";
+            errortxt.transform.GetComponent<Text>().text = "DEBES RELLENAR LOS CAMPOS";
             return;
         }
 
@@ -83,14 +82,12 @@ public class Cliente : MonoBehaviour
         connectionTime = Time.time;
         isConnected = true;
         simpleAES = new SimpleAES();
-        
+
 
     }
 
-    private void Update()
-    {
-        if (!isConnected)
-        {
+    private void Update() {
+        if (!isConnected) {
             return;
         }
 
@@ -102,8 +99,7 @@ public class Cliente : MonoBehaviour
         int dataSize;
         byte error;
         NetworkEventType recData = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, bufferSize, out dataSize, out error);
-        switch (recData)
-        {
+        switch (recData) {
             /*case NetworkEventType.Nothing:
                 break;
 
@@ -111,25 +107,26 @@ public class Cliente : MonoBehaviour
                 break;*/
 
             case NetworkEventType.DataEvent:
-                byte[] msgToDecrypt = new byte[dataSize];
-                Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
-                string msg = simpleAES.Decrypt(msgToDecrypt);
+                //byte[] msgToDecrypt = new byte[dataSize];
+                //Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
+                //string msgd = simpleAES.Decrypt(msgToDecrypt);
 
-                string msgd = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-                Debug.Log("receiving: " + msg + "\n from " + msgd);
+                string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
+                Debug.Log(msg + " Recibido del Server");
+                //Debug.Log("receiving: " + msg + "\n from encryption " + msgd);
                 string[] splitData = msg.Split('|');
-                switch (splitData[0])
-                {
+                switch (splitData[0]) {
                     case "ASKNAME":
                         OnAskName(splitData);
                         break;
 
                     case "CNN":
                         Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
-                        if (splitData[1].Equals(user)){
+                        if (splitData[1].Equals(user)) {
                             rellenarCamposJugadorLocal(splitData);
-                            Debug.Log(jugadorLocal.idUsuario +"aaa");
-                        } else {
+                            Debug.Log(jugadorLocal.idUsuario + "aaa");
+                        }
+                        else {
                             rellenarCamposJugadorRival(splitData);
                         }
                         Loggeado(int.Parse(splitData[3]), splitData[1]);
@@ -140,13 +137,38 @@ public class Cliente : MonoBehaviour
                     case "INV":
                         if (splitData[3] != "-1") {
                             inventarioCargar(splitData[1], int.Parse(splitData[2]), splitData[3], splitData[4], int.Parse(splitData[5]));
-                        } else {
+                        }
+                        else {
                             noObjeto.SetActive(true);
                             noObjeto.transform.GetComponent<Text>().text = "No tiene ningun objeto comprado acceda a la tienda para comprar.";
                         }
                         break;
+                    case "AJU":
+                        Debug.Log(splitData[3].Replace('"', ' ').Trim());
+                        string name, lastName, mail;
+
+                        name = splitData[3].Replace('"', ' ').Trim();
+                        lastName = splitData[4].Replace('"', ' ').Trim();
+                        mail = splitData[5].Replace('"', ' ').Trim();
+
+                        ajustesName.text = name;
+                        ajustesLastName.text = lastName;
+                        ajustesEmail.text = mail;
+                        break;
+
+                    case "AJUPASS":
+                        Debug.Log("ESTOY EN CASE AJUPASS" + splitData[2]);
+                        if (splitData[2].Equals("1")) {
+                            canvas4.SetActive(false);
+                            canvas2.SetActive(true);
+                        }
+                        else {
+                            errorPassAju.GetComponent<Text>().text = "ERROR";
+                            errorPassAju.SetActive(true);
+                        }
+                        break;
                     case "EMPEZAR":
-                       
+
                         break;
                     case "POS1":
                         posJ1.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
@@ -168,28 +190,32 @@ public class Cliente : MonoBehaviour
                     case "DER":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().moverDerecha();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().moverDerecha();
                         }
                         break;
                     case "IZQ":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().moverIzquierda();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().moverIzquierda();
                         }
                         break;
                     case "PAR":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().pararDeMover();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().pararDeMover();
                         }
                         break;
                     case "SAL":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().saltar();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().saltar();
                         }
                         Send("PAR|" + splitData[1], reliableChannel);
@@ -197,14 +223,16 @@ public class Cliente : MonoBehaviour
                     case "ARR":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarArriba();
                         }
                         break;
                     case "ABA":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             jugadorLocal.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
-                        } else {
+                        }
+                        else {
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().apuntarAbajo();
                         }
                         break;
@@ -212,27 +240,32 @@ public class Cliente : MonoBehaviour
                         Vector3 direccion;
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
                             if (!balaCreada) {
-                                bala = Instantiate(prefabBala,jugadorLocal.avatar.transform.position,Quaternion.identity);
-                            } else {
+                                bala = Instantiate(prefabBala, jugadorLocal.avatar.transform.position, Quaternion.identity);
+                            }
+                            else {
                                 bala.transform.position = jugadorLocal.avatar.transform.position;
                             }
                             direccion = jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
                             if (direccion.x > 0) {
                                 bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y, 0);
-                            } else {
+                            }
+                            else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
                             }
                             bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
-                        } else {
+                        }
+                        else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
-                            } else {
+                            }
+                            else {
                                 bala.transform.position = jugadorRival.avatar.transform.position;
                             }
                             direccion = jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
                             if (direccion.x > 0) {
-                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y,0);
-                            } else {
+                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y, 0);
+                            }
+                            else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
                             }
                             bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
@@ -241,14 +274,16 @@ public class Cliente : MonoBehaviour
                         break;
                     case "GOL":
                         if (jugadorLocal.playerName.Equals(splitData[1])) {
-                            jugadorRival.avatar.transform.position=new Vector3(0,3,0);
+                            jugadorRival.avatar.transform.position = new Vector3(0, 3, 0);
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().vida = jugadorRival.avatar.GetComponent<MovimientoGusano>().vida - 1;
                             if (jugadorRival.avatar.GetComponent<MovimientoGusano>().vida == 0) {
                                 GameObject.Find("Juego").GetComponent<Juego>().jugadorPierde(jugadorRival.playerName);
-                            } else {
+                            }
+                            else {
                                 GameObject.Find("Juego").GetComponent<Juego>().cambiarVidas(jugadorRival.avatar.GetComponent<MovimientoGusano>().vida);
                             }
-                        } else {
+                        }
+                        else {
                             jugadorLocal.avatar.transform.position = new Vector3(0, 3, 0);
                         }
                         break;
@@ -264,46 +299,43 @@ public class Cliente : MonoBehaviour
                      break;*/
         }
         if (juego) {
-            if (!jugadoresCreados) { 
-                    SpawnPlayer();
+            if (!jugadoresCreados) {
+                SpawnPlayer();
             }
             if (jugadorRival.avatar.GetComponent<MovimientoGusano>().golpeado == true) {
                 Send("GOL|" + jugadorLocal.playerName, reliableChannel);
                 jugadorRival.avatar.GetComponent<MovimientoGusano>().golpeado = false;
             }
         }
-        
+
     }
-    private void OnAskName(string[] data)
-    {
+    private void OnAskName(string[] data) {
         //Id del player
         ourClientId = int.Parse(data[1]);
         //Enviar el nombre al servidor
-        Send("NAMEIS|" + user +"|" + passwd, reliableChannel);
+        Send("NAMEIS|" + user + "|" + passwd, reliableChannel);
 
     }
 
-    private void Send(string message, int channelId)
-    {
+    private void Send(string message, int channelId) {
         Debug.Log("Sending: " + message);
-        //byte[] msg = Encoding.Unicode.GetBytes(message);
-        byte[] msg = simpleAES.Encrypt(message);
+        byte[] msg = Encoding.Unicode.GetBytes(message);
+        //byte[] msg = simpleAES.Encrypt(message);
         NetworkTransport.Send(hostId, connectionId, channelId, msg, message.Length * sizeof(char), out error);
 
     }
 
     private void Loggeado(int id, string player) {
-        if (id.Equals(-1))
-        {
+        if (id.Equals(-1)) {
             errortxt.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
             errortxt.SetActive(true);
-           // GameObject.Find("PopUp").Equals(EditorUtility.DisplayDialog("El usuario o la Contraseña no son correctos", "", "OK", ""));
+            // GameObject.Find("PopUp").Equals(EditorUtility.DisplayDialog("El usuario o la Contraseña no son correctos", "", "OK", ""));
             nombre.GetComponent<InputField>().text = "";
             password.GetComponent<InputField>().text = "";
         }
         else {
             canvas1.SetActive(false);
-            canvas2.SetActive(true);           
+            canvas2.SetActive(true);
             usuario.text = jugadorLocal.playerName;
         }
 
@@ -327,10 +359,11 @@ public class Cliente : MonoBehaviour
     }
 
     public void SpawnPlayer() {
-        if(jugadorLocal.connectId % 2 != 0) {
+        if (jugadorLocal.connectId % 2 != 0) {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
             jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-        } else {
+        }
+        else {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
             jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
         }
@@ -345,47 +378,47 @@ public class Cliente : MonoBehaviour
         if (jugadorLocal.connectId % 2 != 0) {
             jugadorLocal.avatar.transform.position = posJ1.transform.position;
             jugadorRival.avatar.transform.position = posJ2.transform.position;
-        } else {
+        }
+        else {
             jugadorLocal.avatar.transform.position = posJ2.transform.position;
             jugadorRival.avatar.transform.position = posJ1.transform.position;
         }
     }
 
-   /* 
-    private void SpawnPlayer(string playerName, int cnnId)
-    {
-        if (cnnId == ourClientId)
-        {
-            canvas1.SetActive(false);
-            canvas2.SetActive(true);
-        }
+    /* 
+     private void SpawnPlayer(string playerName, int cnnId)
+     {
+         if (cnnId == ourClientId)
+         {
+             canvas1.SetActive(false);
+             canvas2.SetActive(true);
+         }
 
 
-        Player p = new Player();
-        if (cnnId % 2 != 0)
-        {
-            p.avatar = Instantiate(playerPrefab, jugador1.position, Quaternion.identity);//con esto creo un jugador
-        }
-        else
-        {
-            p.avatar = Instantiate(playerPrefab, jugador2.position, Quaternion.identity);//con esto creo un jugador
-        }
+         Player p = new Player();
+         if (cnnId % 2 != 0)
+         {
+             p.avatar = Instantiate(playerPrefab, jugador1.position, Quaternion.identity);//con esto creo un jugador
+         }
+         else
+         {
+             p.avatar = Instantiate(playerPrefab, jugador2.position, Quaternion.identity);//con esto creo un jugador
+         }
 
 
-        p.playerName = playerName;
-        p.connectId = cnnId;
-        jugadores.Add(p);
-        
-    }*/
+         p.playerName = playerName;
+         p.connectId = cnnId;
+         jugadores.Add(p);
+
+     }*/
     public void Registrar() {
-        Application.OpenURL("http://192.168.6.7:8000/registrar");        
+        Application.OpenURL("http://192.168.6.7:8000/registrar");
     }
-    public int getClienteId()
-    {
+    public int getClienteId() {
 
         return connectionId;
     }
-    private void rellenarCamposJugadorLocal( string[] splitData) {
+    private void rellenarCamposJugadorLocal(string[] splitData) {
         jugadorLocal = new Player();
         jugadorLocal.idUsuario = int.Parse(splitData[3]);
         jugadorLocal.playerName = splitData[1];
@@ -402,6 +435,11 @@ public class Cliente : MonoBehaviour
         canvas2.SetActive(false);
         canvas3.SetActive(true);
     }
+    public void AjustesMenu() {
+        Send("AJU|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName, reliableChannel);
+        canvas2.SetActive(false);
+        canvas4.SetActive(true);
+    }
     public void jugar() {
         SceneManager.LoadScene("Juego");
     }
@@ -414,7 +452,8 @@ public class Cliente : MonoBehaviour
     public void mover(string direccion) {
         if (direccion.Equals("derecha")) {
             Send("DER|" + jugadorLocal.playerName, reliableChannel);
-        } else {
+        }
+        else {
             Send("IZQ|" + jugadorLocal.playerName, reliableChannel);
         }
     }
@@ -467,20 +506,36 @@ public class Cliente : MonoBehaviour
 
         if (direccion.Equals("arriba")) {
             Send("ARR|" + jugadorLocal.playerName, reliableChannel);
-        }else if (direccion.Equals("abajo")) {
+        }
+        else if (direccion.Equals("abajo")) {
             Send("ABA|" + jugadorLocal.playerName, reliableChannel);
         }
     }
     private void bloquearFunciones() {
-        GameObject.Find("Juego").GetComponent<Juego>().miTurno=false;
+        GameObject.Find("Juego").GetComponent<Juego>().miTurno = false;
     }
     private void cambiarTurno() {
         if (miTurno) {
             miTurno = false;
             bloquearFunciones();
-        } else {
+        }
+        else {
             miTurno = true;
             GameObject.Find("Juego").GetComponent<Juego>().miTurno = true;
         }
+    }
+    public void toggleAjustes(bool flag) {
+
+        panelChangePassword.SetActive(toogleAjustes.isOn);
+
+    }
+    public void cambiarContra() {
+
+        if (!passwordAju.GetComponent<Text>().text.Equals(rePasswordAju.GetComponent<Text>().text)) {
+            errorPassAju.SetActive(true);
+            return;
+        }
+
+        Send("AJUPASS|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName + "|" + passwordAjuInput.text, reliableChannel);
     }
 }

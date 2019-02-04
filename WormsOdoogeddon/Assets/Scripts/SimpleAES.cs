@@ -83,8 +83,7 @@ public class SimpleAES : MonoBehaviour {
     }
 
     public byte[] StrToByteArray(string str) {
-        if (str.Length == 0)
-            throw new Exception("Invalid string value in StrToByteArray");
+        
         byte val;
         byte[] byteArr = new byte[str.Length / 3];
         int i = 0;

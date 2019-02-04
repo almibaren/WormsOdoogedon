@@ -87,11 +87,11 @@ public class Servidor : MonoBehaviour {
                 break;
 
             case NetworkEventType.DataEvent:
-               // string msgDebug = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
-               // ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msgDebug);
-                byte[] msgToDecrypt = new byte[dataSize];
-                Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
-                string msg = simpleAES.Decrypt(msgToDecrypt);
+                string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
+                // ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msgDebug);
+                //byte[] msgToDecrypt = new byte[dataSize];
+                //Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
+                //string msg = simpleAES.Decrypt(msgToDecrypt);
                 ToLog(msg);
                 string[] splitData = msg.Split('|');
 
@@ -122,7 +122,12 @@ public class Servidor : MonoBehaviour {
                         }
                         inventario(int.Parse(splitData[1]), connectionId, splitData[2]);
                         break;
-
+                    case "AJU":
+                        ajustes(int.Parse(splitData[1]), connectionId, splitData[2]);
+                        break;
+                    case "AJUPASS":
+                        ajuPassService(int.Parse(splitData[1]), splitData[3], splitData[2]);
+                        break;
                     case "POS1":
                         Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
                         cantidadJugadores++;
@@ -182,6 +187,7 @@ public class Servidor : MonoBehaviour {
 
     }
 
+
     private void sendUserCreationMessages(int cnnId, string playerName, string userId) {
         if (!primerJugadoCreado) {
             jugador1 = new ServerClient();
@@ -189,14 +195,15 @@ public class Servidor : MonoBehaviour {
             jugador1.playerName = playerName;
             jugador1.connectionId = cnnId;
             Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
-        } else {
+        }
+        else {
             Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + userId, reliableChannel, clients);
             Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
         }
     }
 
     private void OnConnection(int cnnId) {
- 
+
         ServerClient c = new ServerClient();
         c.connectionId = cnnId;
         c.playerName = "TEMP";
@@ -220,9 +227,9 @@ public class Servidor : MonoBehaviour {
     }
 
     private void Send(string message, int channelId, List<ServerClient> c) {
-        byte[] msg = simpleAES.Encrypt(message);
+        //byte[] msg = simpleAES.Encrypt(message);
         ToLog("Sending: " + message);
-       // byte[] msg = Encoding.Unicode.GetBytes(message);
+        byte[] msg = Encoding.Unicode.GetBytes(message);
         foreach (ServerClient sc in c) {
             NetworkTransport.Send(hostId, sc.connectionId, channelId, msg, message.Length * sizeof(char), out error);
         }
@@ -249,12 +256,14 @@ public class Servidor : MonoBehaviour {
             JSONObject f = new JSONObject(www.text);
             if (f.ToString().Equals("0")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
-            } else {
+            }
+            else {
                 ToLog(f.ToString());
                 sendUserCreationMessages(cnnId, playerName, f["id"].ToString());
             }
             primerJugadoCreado = true;
-        } else {
+        }
+        else {
             ToLog(www.error);
         }
     }
@@ -288,17 +297,69 @@ public class Servidor : MonoBehaviour {
                     if (f[contador].Equals("")) {
                         datos = false;
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     datos = false;
                 }
             }
 
             if (f.ToString().Equals("[]")) {
                 Send("INV|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
-            } else {
+            }
+            else {
                 Send("INV|" + playerName + '|' + cnnId + '|' + nombres + "|" + rutas + "|" + contador, reliableChannel, clients);
             }
-        } else {
+        }
+        else {
+            ToLog(www.error);
+        }
+    }
+    private void ajustes(int idUsuario, int cnnId, string playerName) {
+
+        string url = "http://192.168.6.7:8000/ws/ajustes";
+        WWWForm usuario = new WWWForm();
+        usuario.AddField("idUsuario", idUsuario);
+        WWW www = new WWW(url, usuario);
+
+        StartCoroutine(ConexionAjustes(www, cnnId, playerName));
+    }
+    private IEnumerator ConexionAjustes(WWW www, int cnnId, string playerName) {
+
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            JSONObject responseJson = new JSONObject(www.text);
+            ToLog(responseJson.ToString());
+
+            Send("AJU|" + playerName + '|' + cnnId + '|' + responseJson["username"] + "|" + responseJson["surname"] + "|" + responseJson["email"], reliableChannel, clients);
+
+        }
+        else {
+            ToLog(www.error);
+        }
+    }
+    private void ajuPassService(int idUsuario, string pass,string playerName) {
+
+        string url = "http://192.168.6.7:8000/ws/cambiarContra";
+        WWWForm usuario = new WWWForm();
+        usuario.AddField("idUsuario", idUsuario);
+        usuario.AddField("passwd", pass);
+        WWW www = new WWW(url, usuario);
+
+        StartCoroutine(ConexionAjuPassService(www , playerName));
+    }
+    private IEnumerator ConexionAjuPassService(WWW www, string playerName) {
+
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            JSONObject responseJson = new JSONObject(www.text);
+            ToLog(responseJson.ToString());
+
+            Send("AJUPASS|" + playerName + '|'  + responseJson.ToString().Replace('{', ' ').Replace('}', ' ').Trim(), reliableChannel, clients);
+
+        }
+        else {
             ToLog(www.error);
         }
     }
@@ -306,7 +367,8 @@ public class Servidor : MonoBehaviour {
         if (logCounter >= 18) {
             LoggingText.GetComponent<Text>().text = msg;
             logCounter = 1;
-        } else {
+        }
+        else {
             LoggingText.GetComponent<Text>().text = LoggingText.GetComponent<Text>().text + "\n" + msg;
             logCounter++;
         }
