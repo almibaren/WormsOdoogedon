@@ -430,7 +430,11 @@ public class Cliente : MonoBehaviour
         Send("PAR|" + jugadorLocal.playerName, reliableChannel);
     }
     public void volver() {
-        Debug.Log("*^*^*^*^*^*^*^*^*^*^*^*^*^*");
+
+        foreach (Transform child in GameObject.Find("Inventario").transform.Find("Panel").transform.Find("Gorros")) {
+            Destroy(child.gameObject);
+        }
+
         canvas2.SetActive(true);
         canvas3.SetActive(false);
         canvas4.SetActive(false);
@@ -440,7 +444,7 @@ public class Cliente : MonoBehaviour
     public void inventarioCargar(string playername, int cnnid, string nombres, string rutas, int contador) {
         string[] nombreGorro = nombres.Replace('"',' ').Trim().Split('_');
         string[] rutaGorro = rutas.Replace('"', ' ').Trim().Split('-');
-        Transform inventario = GameObject.Find("Inventario").transform.Find("Panel");
+        Transform inventario = GameObject.Find("Inventario").transform.Find("Panel").transform.Find("Gorros");
         if (inventario == null) {
             Debug.Log("INVENTARIO ES NULL");
         }
