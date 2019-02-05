@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MovimientoGusano : MonoBehaviour {
 
@@ -12,7 +13,8 @@ public class MovimientoGusano : MonoBehaviour {
     private Animator anim;
     private GameObject posLejana,rotador,posCercana;
     private float rotation, actualRotation, rotationPerSec;
-    public bool golpeado;
+    public Text vidaTexto;
+    public bool golpeado,tocandoSuelo;
     public int vida;
 
     // Use this for initialization
@@ -30,12 +32,16 @@ public class MovimientoGusano : MonoBehaviour {
         rotationPerSec = 0;
         golpeado = false;
         vida = 3;
-        
+        vidaTexto.text = 3 + "";
+        tocandoSuelo = false;
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.transform.tag.Equals("Bala")) {
             Debug.Log("Golpeado");
             golpeado = true;
+            vidaTexto.text = int.Parse(vidaTexto.text) - 1 +"";
+        }else if (collision.transform.tag.Equals("Mapa")) {
+            tocandoSuelo = true;
         }
     }
 
@@ -44,6 +50,9 @@ public class MovimientoGusano : MonoBehaviour {
         rotation = rotationPerSec * Time.deltaTime;
         actualRotation = rotador.transform.localRotation.eulerAngles.z;
         rotador.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, actualRotation + rotation));
+        if (tocandoSuelo) {
+            tocandoSuelo = false;
+        }
     }
     public void moverDerecha() {
         miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled=false;

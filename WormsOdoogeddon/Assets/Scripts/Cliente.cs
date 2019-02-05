@@ -215,9 +215,9 @@ public class Cliente : MonoBehaviour
                             }
                             direccion = jugadorLocal.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
                             if (direccion.x > 0) {
-                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y, 0);
+                                bala.transform.position = new Vector3(bala.transform.position.x + 0.4f, bala.transform.position.y, 0);
                             } else {
-                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                                bala.transform.position = new Vector3(bala.transform.position.x - 0.4f, bala.transform.position.y, 0);
                             }
                             bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
                         } else {
@@ -228,9 +228,9 @@ public class Cliente : MonoBehaviour
                             }
                             direccion = jugadorRival.avatar.GetComponent<MovimientoGusano>().getDireccionDisparo();
                             if (direccion.x > 0) {
-                                bala.transform.position = new Vector3(bala.transform.position.x + 1, bala.transform.position.y,0);
+                                bala.transform.position = new Vector3(bala.transform.position.x + 0.4f, bala.transform.position.y,0);
                             } else {
-                                bala.transform.position = new Vector3(bala.transform.position.x - 1, bala.transform.position.y, 0);
+                                bala.transform.position = new Vector3(bala.transform.position.x - 0.4f, bala.transform.position.y, 0);
                             }
                             bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
                         }
