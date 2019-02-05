@@ -2951,19 +2951,18 @@ MonoBehaviour:
   password: {fileID: 1526084475}
   errortxt: {fileID: 0}
   noObjeto: {fileID: 681140105}
-  gorro2Prefab: {fileID: 1602045890058632, guid: 3fb03a88d6913bb42a191507d30cb1c3,
+  gorro2Prefab: {fileID: 1133150827172922, guid: 87c550f5d73492f4cb0bdef2322a23e1,
     type: 2}
-  gorrete2Prefab: {fileID: 1336772864927854, guid: 109a0182cbdc4d442894d09bc5881a53,
+  gorrete2Prefab: {fileID: 1058339381362332, guid: ece031ad7c98ee242b80532ecc7a0d62,
     type: 2}
-  gorrete3Prefab: {fileID: 1666160301870082, guid: 87ee8463d5fc397488abca2f35a587d5,
+  gorrete3Prefab: {fileID: 1867220557012878, guid: 4b911462eb048504b83e65470d8dc331,
     type: 2}
-  pruebita1Prefab: {fileID: 1388296722254778, guid: eac8585f72f730e49b23ea1964bde5b0,
+  pruebita1Prefab: {fileID: 1894173890480680, guid: d68197e736f037c4c82efeafdec74320,
     type: 2}
   canvas1: {fileID: 1751701800}
   canvas2: {fileID: 653823350}
   canvas3: {fileID: 780773425}
   canvas4: {fileID: 987619766}
-  gorroSeleccionado: {fileID: 0}
   usuario: {fileID: 1285153402}
   prefabGusano: {fileID: 1061974170924816, guid: 65c12f0bc92a9e94593fd0cdda208f6e,
     type: 2}

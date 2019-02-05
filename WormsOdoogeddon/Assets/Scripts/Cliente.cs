@@ -34,7 +34,6 @@ public class Cliente : MonoBehaviour
     private float connectionTime;
     private int connectionId;
     private bool isConnected;
-    ArrayList gorros = new ArrayList();
     private bool isStarted = false;
     //private SimpleAES simpleAES;
     private byte error;
@@ -46,7 +45,7 @@ public class Cliente : MonoBehaviour
     public List<Player> jugadores = new List<Player>();
     public GameObject nombre, password,errortxt,noObjeto,gorro2Prefab, gorrete2Prefab, gorrete3Prefab, pruebita1Prefab;
     private string user,passwd;
-    public GameObject canvas1, canvas2,canvas3,canvas4,gorroSeleccionado;
+    public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
     public GameObject prefabGusano, posJ1,posJ2,prefabBala;
     private GameObject bala;
@@ -338,7 +337,6 @@ public class Cliente : MonoBehaviour
         if(jugadorLocal.connectId % 2 != 0) {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
             jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-            
         } else {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
             jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
@@ -351,12 +349,9 @@ public class Cliente : MonoBehaviour
     }
 
     private void reposicionarJugadores() {
-        Debug.Log("creo gorro " + gorroSeleccionado);
         if (jugadorLocal.connectId % 2 != 0) {
             jugadorLocal.avatar.transform.position = posJ1.transform.position;
             jugadorRival.avatar.transform.position = posJ2.transform.position;
-            Instantiate(gorroSeleccionado, jugadorLocal.avatar.transform.position, Quaternion.identity, jugadorLocal.avatar.transform);
-            
         } else {
             jugadorLocal.avatar.transform.position = posJ2.transform.position;
             jugadorRival.avatar.transform.position = posJ1.transform.position;
@@ -421,6 +416,8 @@ public class Cliente : MonoBehaviour
         //He intentado que abra la tienda ya loggeado pero resulta imposible hacer openUrl + post. O uno u otro pero los 2 juntos no se pueden.
         Application.OpenURL("http://192.168.6.7:8000/login");
     }
+    public void juegoEmpezado() {
+    }
     public void mover(string direccion) {
         if (direccion.Equals("derecha")) {
             Send("DER|" + jugadorLocal.playerName, reliableChannel);
@@ -454,20 +451,15 @@ public class Cliente : MonoBehaviour
             Debug.Log("INVENTARIO ES NULL");
         }
         for (int i = 0; i < contador; i++) {
-            Vector2 pos;
-            if(i % 2 == 0) {
-                pos = new Vector2(4, 3 - (i * 2));
-            } else {
-                pos = new Vector2(-4, 3 - (i * 2));
-            }
+            Debug.Log(nombreGorro[i]);
             if (nombreGorro[i].Trim().Equals("gorro2")) {
-              gorros.Add(Instantiate(gorro2Prefab, pos, Quaternion.identity, inventario));
+              Instantiate(gorro2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             }else if (nombreGorro[i].Trim().Equals("gorrete2")) {
-              gorros.Add(Instantiate(gorrete2Prefab, pos, Quaternion.identity, inventario));
+              Instantiate(gorrete2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             } else if (nombreGorro[i].Trim().Equals("gorrete3")) {
-                gorros.Add(Instantiate(gorrete3Prefab, pos, Quaternion.identity, inventario));
+              Instantiate(gorrete3Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             } else if (nombreGorro[i].Trim().Equals("pruebita1")) {
-                gorros.Add(Instantiate(pruebita1Prefab, pos, Quaternion.identity, inventario));
+              Instantiate(pruebita1Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
             }
         }
     }
@@ -508,14 +500,5 @@ public class Cliente : MonoBehaviour
     }
     public void quitarTexto() {
         GameObject.Find("Juego").GetComponent<Juego>().turno.enabled = false;
-    }
-    public void seleccionarGorro(GameObject gorro) {
-        Debug.Log("llego al gorro");
-        for(int i = 0; i < gorros.Count; i++) {
-            if (gorros[i].Equals(gorro)) {
-                Debug.Log("tengo el gorro" + gorro.name);
-                gorroSeleccionado = gorro;
-            }
-        }
     }
 }

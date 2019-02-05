@@ -189,7 +189,6 @@ public class Servidor : MonoBehaviour
         msg = msg.Trim('|');
         //ejemplo de linea de envio --> ASKNAME|1|ANDER%1|
         //ToLog("enviado a clientes"+msg);
-        ToLog(msg + " ASKNAME");
         Send(msg, reliableChannel, cnnId);
 
     }
