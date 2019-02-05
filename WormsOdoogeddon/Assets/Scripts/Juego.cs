@@ -8,7 +8,7 @@ public class Juego : MonoBehaviour {
 
     public GameObject posJ1, posJ2;
     private Cliente clienteScript;
-    public Text vidas;
+    public Text vidas,turno;
     public bool miTurno = false;
 
     // Use this for initialization
@@ -16,6 +16,7 @@ public class Juego : MonoBehaviour {
         clienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
         clienteScript.juegoEmpezado();
         clienteScript.setpos(posJ1,posJ2);
+        
 
     }
 

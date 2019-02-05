@@ -483,11 +483,13 @@ public class Cliente : MonoBehaviour
     }
     private void cambiarTurno() {
         if (miTurno) {
+            GameObject.Find("Juego").GetComponent<Juego>().turno.text = "Turno de " + jugadorRival.playerName;
             miTurno = false;
             bloquearFunciones();
         } else {
             miTurno = true;
             GameObject.Find("Juego").GetComponent<Juego>().miTurno = true;
+            GameObject.Find("Juego").GetComponent<Juego>().turno.text = "Turno de " + jugadorLocal.playerName;
         }
     }
 }
