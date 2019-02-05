@@ -271,6 +271,8 @@ public class Cliente : MonoBehaviour
             }
         }
         
+        
+
     }
     private void OnAskName(string[] data)
     {
@@ -301,7 +303,7 @@ public class Cliente : MonoBehaviour
     private void Loggeado(int id, string player) {
         if (id.Equals(-1))
         {
-            errortxt.transform.GetComponent<Text>().text = "EL USUARIO O LA CONTRASEÑA NO SON CORRECTOS";
+            errortxt.transform.GetComponent<Text>().text = "EL USUARIO O LA PASSWORD NO SON CORRECTOS";
             errortxt.SetActive(true);
            // GameObject.Find("PopUp").Equals(EditorUtility.DisplayDialog("El usuario o la Contraseña no son correctos", "", "OK", ""));
             nombre.GetComponent<InputField>().text = "";
