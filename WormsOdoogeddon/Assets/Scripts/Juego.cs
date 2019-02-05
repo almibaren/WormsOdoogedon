@@ -16,7 +16,7 @@ public class Juego : MonoBehaviour {
         clienteScript = (Cliente)FindObjectOfType(typeof(Cliente));
         clienteScript.juegoEmpezado();
         clienteScript.setpos(posJ1,posJ2);
-        
+        turno.enabled = false;
 
     }
 
