@@ -50,34 +50,43 @@ public class MovimientoGusano : MonoBehaviour {
         rotation = rotationPerSec * Time.deltaTime;
         actualRotation = rotador.transform.localRotation.eulerAngles.z;
         rotador.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, actualRotation + rotation));
-        if (tocandoSuelo) {
+        if (miRigibody.velocity.y < -0.1) {
             tocandoSuelo = false;
+            pararDeMover();
+        } else {
+            tocandoSuelo = true;
         }
     }
     public void moverDerecha() {
-        miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled=false;
-        moveHorizontal = 10;
-        velocidad = 30;
-        sprite.flipX = true;
-        anim.SetBool("moviendo", true);
+        if (tocandoSuelo) {
+            miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
+            moveHorizontal = 10;
+            velocidad = 30;
+            sprite.flipX = true;
+            anim.SetBool("moviendo", true);
+        }
     }
     public void pararDeMover() {
-        miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = true;
-        velocidad = 0;
-        anim.SetBool("moviendo", false);
-        rotationPerSec = 0;
+            miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = true;
+            velocidad = 0;
+            anim.SetBool("moviendo", false);
+            rotationPerSec = 0;
     }
     public void moverIzquierda() {
-        miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
-        moveHorizontal = -10;
-        velocidad = 30;
-        sprite.flipX = false;
-        anim.SetBool("moviendo", true);
+        if (tocandoSuelo) {
+            miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
+            moveHorizontal = -10;
+            velocidad = 30;
+            sprite.flipX = false;
+            anim.SetBool("moviendo", true);
+        }
     }
     public void saltar() {
-        miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
-        moveVertical = 10;
-        velocidad = 500;
+        if (tocandoSuelo) {
+            miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
+            moveVertical = 10;
+            velocidad = 500;
+        }
     }
     public void apuntarArriba() {
         rotationPerSec = -20;
