@@ -96,7 +96,7 @@ public class MovimientoGusano : MonoBehaviour {
     }
 
     public Vector3 getDireccionDisparo() {
-        return miTransform.FindChild("rotador").FindChild("posLejana").transform.position - miTransform.FindChild("rotador").FindChild("posCercana").transform.position;
+        return miTransform.Find("rotador").Find("posLejana").transform.position - miTransform.Find("rotador").Find("posCercana").transform.position;
     }
 
     void FixedUpdate() {
