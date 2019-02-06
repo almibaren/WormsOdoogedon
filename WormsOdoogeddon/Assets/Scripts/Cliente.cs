@@ -30,6 +30,7 @@ public class Cliente : MonoBehaviour
     private int reliableChannel;
     private int unReliableChannel;
     private Player jugadorLocal, jugadorRival;
+    ArrayList gorros = new ArrayList();
 
     private float connectionTime;
     private int connectionId;
@@ -47,7 +48,7 @@ public class Cliente : MonoBehaviour
     private string user,passwd;
     public GameObject canvas1, canvas2,canvas3,canvas4;
     public Text usuario;
-    public GameObject prefabGusano, posJ1,posJ2,prefabBala;
+    public GameObject prefabGusano, posJ1,posJ2,prefabBala, gorroSeleccionado;
     private GameObject bala;
     private bool juego = false, jugadoresCreados = false, balaCreada = false, miTurno = false;
 
@@ -451,15 +452,24 @@ public class Cliente : MonoBehaviour
             Debug.Log("INVENTARIO ES NULL");
         }
         for (int i = 0; i < contador; i++) {
-            Debug.Log(nombreGorro[i]);
+            Vector2 pos;
+            if (i % 2 == 0) {
+                pos = new Vector2(4, 3 - (i * 2));
+            } else {
+                pos = new Vector2(-4, 3 - (i * 2));
+            }
             if (nombreGorro[i].Trim().Equals("gorro2")) {
-              Instantiate(gorro2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
-            }else if (nombreGorro[i].Trim().Equals("gorrete2")) {
-              Instantiate(gorrete2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                Instantiate(gorro2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                gorros.Add(Instantiate(gorro2Prefab, pos, Quaternion.identity, inventario));
+            } else if (nombreGorro[i].Trim().Equals("gorrete2")) {
+                Instantiate(gorrete2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                gorros.Add(Instantiate(gorrete2Prefab, pos, Quaternion.identity, inventario));
             } else if (nombreGorro[i].Trim().Equals("gorrete3")) {
-              Instantiate(gorrete3Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                Instantiate(gorrete3Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                gorros.Add(Instantiate(gorrete3Prefab, pos, Quaternion.identity, inventario));
             } else if (nombreGorro[i].Trim().Equals("pruebita1")) {
-              Instantiate(pruebita1Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                Instantiate(pruebita1Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
+                gorros.Add(Instantiate(pruebita1Prefab, pos, Quaternion.identity, inventario));
             }
         }
     }
@@ -500,5 +510,14 @@ public class Cliente : MonoBehaviour
     }
     public void quitarTexto() {
         GameObject.Find("Juego").GetComponent<Juego>().turno.enabled = false;
+    }
+    public void seleccionarGorro(GameObject gorro) {
+        Debug.Log("llego al gorro");
+        for (int i = 0; i < gorros.Count; i++) {
+            if (gorros[i].Equals(gorro)) {
+                Debug.Log("tengo el gorro" + gorro.name);
+                gorroSeleccionado = gorro;
+            }
+        }
     }
 }
