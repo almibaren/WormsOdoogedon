@@ -220,7 +220,7 @@ public class Cliente : MonoBehaviour
                             } else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 0.4f, bala.transform.position.y, 0);
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 400);
                         } else {
                             if (!balaCreada) {
                                 bala = Instantiate(prefabBala, jugadorRival.avatar.transform.position, Quaternion.identity);
@@ -233,7 +233,7 @@ public class Cliente : MonoBehaviour
                             } else {
                                 bala.transform.position = new Vector3(bala.transform.position.x - 0.4f, bala.transform.position.y, 0);
                             }
-                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 100);
+                            bala.GetComponent<Rigidbody2D>().AddForce(direccion * 400);
                         }
                         cambiarTurno();
                         break;
@@ -243,11 +243,19 @@ public class Cliente : MonoBehaviour
                             jugadorRival.avatar.GetComponent<MovimientoGusano>().vida = jugadorRival.avatar.GetComponent<MovimientoGusano>().vida - 1;
                             if (jugadorRival.avatar.GetComponent<MovimientoGusano>().vida == 0) {
                                 GameObject.Find("Juego").GetComponent<Juego>().jugadorPierde(jugadorRival.playerName);
+                                Invoke("finPartida", 2);
                             } else {
-                                GameObject.Find("Juego").GetComponent<Juego>().cambiarVidas(jugadorRival.avatar.GetComponent<MovimientoGusano>().vida);
+                                GameObject.Find("Juego").GetComponent<Juego>().cambiarVidasRival(jugadorRival.avatar.GetComponent<MovimientoGusano>().vida);
                             }
                         } else {
                             jugadorLocal.avatar.transform.position = new Vector3(0, 3, 0);
+                            jugadorLocal.avatar.GetComponent<MovimientoGusano>().vida = jugadorLocal.avatar.GetComponent<MovimientoGusano>().vida - 1;
+                            if (jugadorLocal.avatar.GetComponent<MovimientoGusano>().vida == 0) {
+                                GameObject.Find("Juego").GetComponent<Juego>().jugadorPierde(jugadorLocal.playerName);
+                                Invoke("finPartida", 2);
+                            } else {
+                                GameObject.Find("Juego").GetComponent<Juego>().cambiarVidasLocal(jugadorLocal.avatar.GetComponent<MovimientoGusano>().vida);
+                            }
                         }
                         break;
 
@@ -516,5 +524,8 @@ public class Cliente : MonoBehaviour
                 gorroSeleccionado = gorro;
             }
         }
+    }
+    public void finPartida() {
+        SceneManager.LoadScene("Cliente");
     }
 }

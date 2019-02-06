@@ -8,7 +8,7 @@ public class Juego : MonoBehaviour {
 
     public GameObject posJ1, posJ2;
     private Cliente clienteScript;
-    public Text vidas,turno;
+    public Text vidas,turno,vidasRival;
     public bool miTurno = false;
 
     // Use this for initialization
@@ -62,10 +62,13 @@ public class Juego : MonoBehaviour {
             clienteScript.disparar();
         }
     }
-    public void cambiarVidas(int vida) {
+    public void cambiarVidasLocal(int vida) {
         vidas.text = vida + " ";
     }
+    public void cambiarVidasRival(int vida) {
+        vidasRival.text = vida + "";
+    }
     public void jugadorPierde(string playerName) {
-        vidas.text = playerName;
+        turno.text = playerName + " ha perdido";
     }
 }

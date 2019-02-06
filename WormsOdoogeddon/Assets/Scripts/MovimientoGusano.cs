@@ -85,7 +85,7 @@ public class MovimientoGusano : MonoBehaviour {
         if (tocandoSuelo) {
             miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
             moveVertical = 10;
-            velocidad = 500;
+            velocidad = 50;
         }
     }
     public void apuntarArriba() {
