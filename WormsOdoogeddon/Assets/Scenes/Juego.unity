@@ -1716,18 +1716,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1820818070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 798fe4491ce2e54448b32e8d71893ee0, type: 3}
+  m_Script: {fileID: 11500000, guid: 4638ff4f2f91e8d46903c4116091942a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   posJ1: {fileID: 307137329}
   posJ2: {fileID: 1080231345}
   vidas: {fileID: 1425936637}
-  derechaBoton: {fileID: 1644893502}
-  izquierdaBoton: {fileID: 1031072514}
-  arribaBoton: {fileID: 1236213765}
-  abajoBoton: {fileID: 1699136603}
-  dispararBoton: {fileID: 4144564}
-  saltarBoton: {fileID: 733897596}
+  miTurno: 0
 --- !u!4 &1820818072
 Transform:
   m_ObjectHideFlags: 0

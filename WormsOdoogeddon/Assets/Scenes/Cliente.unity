@@ -3534,7 +3534,7 @@ MonoBehaviour:
   password: {fileID: 1526084475}
   errortxt: {fileID: 0}
   noObjeto: {fileID: 681140105}
-  gorroPrefab: {fileID: 1938476089904964, guid: 8779157773d64d448a213e3d14b29497,
+  gorroPrefab: {fileID: 1938476089904964, guid: f094f8aacd5c6684fa908d79182d519e,
     type: 2}
   passwordAju: {fileID: 1820811662}
   rePasswordAju: {fileID: 1004121968}
@@ -3548,12 +3548,13 @@ MonoBehaviour:
   ajustesName: {fileID: 340070372}
   ajustesLastName: {fileID: 57937182}
   ajustesEmail: {fileID: 1461763961}
-  prefabGusano: {fileID: 1061974170924816, guid: 65c12f0bc92a9e94593fd0cdda208f6e,
+  prefabGusano: {fileID: 1061974170924816, guid: fa12e7b4c852ef441bf4fae3a8606e39,
     type: 2}
   posJ1: {fileID: 0}
   posJ2: {fileID: 0}
-  prefabBala: {fileID: 1406267145876712, guid: 3fb03a88d6913bb42a191507d30cb1c3, type: 2}
+  prefabBala: {fileID: 1061974170924816, guid: fa12e7b4c852ef441bf4fae3a8606e39, type: 2}
   toogleAjustes: {fileID: 2111053272}
+  passwordAjuInput: {fileID: 0}
 --- !u!1 &1307010881
 GameObject:
   m_ObjectHideFlags: 0

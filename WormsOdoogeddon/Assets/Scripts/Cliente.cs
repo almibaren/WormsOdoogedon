@@ -34,11 +34,8 @@ public class Cliente : MonoBehaviour {
     private int connectionId;
     private bool isConnected;
     private bool isStarted = false;
-    //private SimpleAES simpleAES;
     private byte error;
 
-    //el nombre del usuario
-    //public string playerName;
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
@@ -121,15 +118,21 @@ public class Cliente : MonoBehaviour {
                         break;
 
                     case "CNN":
-                        Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
-                        if (splitData[1].Equals(user)) {
-                            rellenarCamposJugadorLocal(splitData);
-                            Debug.Log(jugadorLocal.idUsuario + "aaa");
+                        int id=-1;
+                        string nameToLog="";
+                        //string[] splitSplitData = splitData[1].Split('%');
+                        for (int i = 1; i < splitData.Length; i++) {
+                            string[] splitSplitData = splitData[i].Split('%');
+                            if (splitSplitData[0].Equals(user)) {
+                                rellenarCamposJugadorLocal(splitData[i].Split('%'));
+                                id = int.Parse(splitSplitData[2]);
+                                nameToLog = splitSplitData[0];
+                            }
+                            else {
+                                rellenarCamposJugadorRival(splitData[i].Split('%'));
+                            }
                         }
-                        else {
-                            rellenarCamposJugadorRival(splitData);
-                        }
-                        Loggeado(int.Parse(splitData[3]), splitData[1]);
+                        Loggeado(id, nameToLog);
                         break;
 
                     case "DC":
@@ -318,10 +321,14 @@ public class Cliente : MonoBehaviour {
     }
 
     private void Send(string message, int channelId) {
-        Debug.Log("Sending: " + message);
-        byte[] msg = Encoding.Unicode.GetBytes(message);
-        //byte[] msg = simpleAES.Encrypt(message);
+        string msgBar = message + "|º";
+        //string sMsg = simpleAES.Encrypt(message);
+        byte[] msg = simpleAES.Encrypt(msgBar);
+        simpleAES = new SimpleAES();
+        Debug.Log("El byte Array que envia el cliente es de: " + msg.Length);
+
         NetworkTransport.Send(hostId, connectionId, channelId, msg, message.Length * sizeof(char), out error);
+        
 
     }
 
@@ -420,15 +427,15 @@ public class Cliente : MonoBehaviour {
     }
     private void rellenarCamposJugadorLocal(string[] splitData) {
         jugadorLocal = new Player();
-        jugadorLocal.idUsuario = int.Parse(splitData[3]);
-        jugadorLocal.playerName = splitData[1];
-        jugadorLocal.connectId = int.Parse(splitData[2]);
+        jugadorLocal.idUsuario = int.Parse(splitData[2]);
+        jugadorLocal.playerName = splitData[0];
+        jugadorLocal.connectId = int.Parse(splitData[1]);
     }
     private void rellenarCamposJugadorRival(string[] splitData) {
         jugadorRival = new Player();
-        jugadorRival.idUsuario = int.Parse(splitData[3]);
-        jugadorRival.playerName = splitData[1];
-        jugadorRival.connectId = int.Parse(splitData[2]);
+        jugadorRival.idUsuario = int.Parse(splitData[2]);
+        jugadorRival.playerName = splitData[0];
+        jugadorRival.connectId = int.Parse(splitData[1]);
     }
     public void inventarioMenu() {
         Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName, reliableChannel);

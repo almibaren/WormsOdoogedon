@@ -89,10 +89,11 @@ public class Servidor : MonoBehaviour {
             case NetworkEventType.DataEvent:
                 string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
                 // ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msgDebug);
-                //byte[] msgToDecrypt = new byte[dataSize];
-                //Array.Copy(recBuffer, 0, msgToDecrypt, 0, dataSize);
-                //string msg = simpleAES.Decrypt(msgToDecrypt);
-                ToLog(msg);
+                //byte[] msgToDecrypt = new byte[32];
+                //ToLog("El byte array es de: " + msgToDecrypt.Length.ToString());
+                //Array.Copy(recBuffer, 0, msgToDecrypt, 0, 32);
+                msg = simpleAES.Decrypt(recBuffer);
+                ToLog("Mensajes desencriptados --> " + msg.Split('º')[0]);
                 string[] splitData = msg.Split('|');
 
                 switch (splitData[0]) {
@@ -179,6 +180,7 @@ public class Servidor : MonoBehaviour {
                         break;
 
                 }
+                simpleAES = new SimpleAES();
                 break;
 
             case NetworkEventType.DisconnectEvent:
@@ -189,18 +191,28 @@ public class Servidor : MonoBehaviour {
 
 
     private void sendUserCreationMessages(int cnnId, string playerName, string userId) {
-        if (!primerJugadoCreado) {
-            jugador1 = new ServerClient();
-            jugador1.id = int.Parse(userId);
-            jugador1.playerName = playerName;
-            jugador1.connectionId = cnnId;
-            Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
+
+        clients.Find(x => x.connectionId == cnnId).playerName = playerName;
+        clients.Find(x => x.connectionId == cnnId).id = int.Parse(userId);
+        string msg = "";
+        foreach (ServerClient sc in clients) {
+            msg += "|" + sc.playerName + "%" + sc.connectionId + "%" + sc.id;
         }
-        else {
-            Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + userId, reliableChannel, clients);
-            Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
-        }
+
+        Send("CNN" + msg, reliableChannel, clients);
     }
+    //if (!primerJugadoCreado) {
+    //    jugador1 = new ServerClient();
+    //    jugador1.id = int.Parse(userId);
+    //    jugador1.playerName = playerName;
+    //    jugador1.connectionId = cnnId;
+    //    Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
+    //}
+    //else {
+    //    Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + userId, reliableChannel, clients);
+    //    Send("CNN|" + playerName + '|' + cnnId + '|' + userId, reliableChannel, clients);
+    //}
+//}
 
     private void OnConnection(int cnnId) {
 
@@ -217,6 +229,8 @@ public class Servidor : MonoBehaviour {
         msg = msg.Trim('|');
 
         Send(msg, reliableChannel, cnnId);
+
+
 
     }
 
