@@ -10,8 +10,7 @@ using UnityEngine.UI;
 
 
 //Clase para los clientes
-public class ServerClient
-{
+public class ServerClient{
     public int connectionId;
     public string playerName;
     public int id;
@@ -97,18 +96,12 @@ public class Servidor : MonoBehaviour
             case NetworkEventType.DataEvent:
                 string msg = Encoding.Unicode.GetString(recBuffer, 0, dataSize);
                 ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msg);
+                msg = simpleAES.Decrypt(recBuffer);
                 string[] splitData = msg.Split('|');
                 switch (splitData[0])
                 {
                     case "NAMEIS":
                         SymfonyConnect(connectionId, splitData[1],splitData[2]);
-                        
-                        break;
-
-                    case "CNN":
-                        break;
-
-                    case "DC":
                         break;
 
                     case "EMPEZAR":
@@ -118,8 +111,15 @@ public class Servidor : MonoBehaviour
 
                     case "INV":
                         inventario(int.Parse(splitData[1]),connectionId,splitData[2]);
-                        
                         break;
+
+                    case "AJU":
+                        ajustes(int.Parse(splitData[1]), connectionId, splitData[2]);
+                        break;
+                    case "AJUPASS":
+                        ajuPassService(int.Parse(splitData[1]), splitData[3], splitData[2]);
+                        break;
+
                     case "POS1":
                         Send("POS1|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
                         cantidadJugadores++;
@@ -160,6 +160,7 @@ public class Servidor : MonoBehaviour
                         break;
 
                 }
+                simpleAES = new SimpleAES();
                 break;
 
             case NetworkEventType.DisconnectEvent:
@@ -228,37 +229,36 @@ public class Servidor : MonoBehaviour
         //ToLog("Nuevo jugador" + playerName + "Se ha unido a la partida");
     }
 
-    private IEnumerator WaitForWWW(WWW www, int cnnId, string playerName)
-    {
+    private IEnumerator WaitForWWW(WWW www, int cnnId, string playerName) {
         yield return www;
-       
+
         if (string.IsNullOrEmpty(www.error)) {
-            
+
             JSONObject f = new JSONObject(www.text);
-            ToLog(f.ToString());
             if (f.ToString().Equals("0")) {
                 Send("CNN|" + playerName + '|' + cnnId + '|' + -1, reliableChannel, clients);
-            }else{
+            } else {
                 ToLog(f.ToString());
-                if (!primerJugadoCreado) {
-                    jugador1 = new ServerClient();
-                    jugador1.id = int.Parse(f["id"].ToString());
-                    jugador1.playerName = playerName;
-                    jugador1.connectionId = cnnId;
-                    Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
-                } else {
-                    Send("CNN|" + jugador1.playerName + '|' + jugador1.connectionId + '|' + f["id"].ToString(), reliableChannel, clients);
-                    Send("CNN|" + playerName + '|' + cnnId + '|' + f["id"].ToString(), reliableChannel, clients);
-                }
+                sendUserCreationMessages(cnnId, playerName, f["id"].ToString());
             }
-            //ToLog(f[0]["id"].ToString());
             primerJugadoCreado = true;
-        }
-        else
-        {          
+        } else {
             ToLog(www.error);
         }
     }
+
+    private void sendUserCreationMessages(int cnnId, string playerName, string userId) {
+
+        clients.Find(x => x.connectionId == cnnId).playerName = playerName;
+        clients.Find(x => x.connectionId == cnnId).id = int.Parse(userId);
+        string msg = "";
+        foreach (ServerClient sc in clients) {
+            msg += "|" + sc.playerName + "%" + sc.connectionId + "%" + sc.id;
+        }
+
+        Send("CNN" + msg, reliableChannel, clients);
+    }
+
     private void inventario(int idUsuario, int cnnId, string playerName) {
         //Conectar con symphony
         string url = "http://192.168.6.7:8000/ws/inventario";
@@ -304,6 +304,54 @@ public class Servidor : MonoBehaviour
             ToLog(www.error);
         }
     }
+    private void ajustes(int idUsuario, int cnnId, string playerName) {
+
+        string url = "http://192.168.6.7:8000/ws/ajustes";
+        WWWForm usuario = new WWWForm();
+        usuario.AddField("idUsuario", idUsuario);
+        WWW www = new WWW(url, usuario);
+
+        StartCoroutine(ConexionAjustes(www, cnnId, playerName));
+    }
+    private IEnumerator ConexionAjustes(WWW www, int cnnId, string playerName) {
+
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            JSONObject responseJson = new JSONObject(www.text);
+            ToLog(responseJson.ToString());
+
+            Send("AJU|" + playerName + '|' + cnnId + '|' + responseJson["username"] + "|" + responseJson["surname"] + "|" + responseJson["email"], reliableChannel, clients);
+
+        } else {
+            ToLog(www.error);
+        }
+    }
+    private void ajuPassService(int idUsuario, string pass, string playerName) {
+
+        string url = "http://192.168.6.7:8000/ws/cambiarContra";
+        WWWForm usuario = new WWWForm();
+        usuario.AddField("idUsuario", idUsuario);
+        usuario.AddField("passwd", pass);
+        WWW www = new WWW(url, usuario);
+
+        StartCoroutine(ConexionAjuPassService(www, playerName));
+    }
+    private IEnumerator ConexionAjuPassService(WWW www, string playerName) {
+
+        yield return www;
+
+        if (string.IsNullOrEmpty(www.error)) {
+            JSONObject responseJson = new JSONObject(www.text);
+            ToLog(responseJson.ToString());
+
+            Send("AJUPASS|" + playerName + '|' + responseJson.ToString().Replace('{', ' ').Replace('}', ' ').Trim(), reliableChannel, clients);
+
+        } else {
+            ToLog(www.error);
+        }
+    }
+
     private void ToLog(string msg) {
         if (logCounter >= 18) {
             LoggingText.GetComponent<Text>().text = msg;

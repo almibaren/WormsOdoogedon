@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114425626966963060}
   - component: {fileID: 114958702502386688}
   m_Layer: 5
-  m_Name: gorrete2
+  m_Name: Gorrete2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

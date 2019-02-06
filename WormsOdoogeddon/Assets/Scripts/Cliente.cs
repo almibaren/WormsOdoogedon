@@ -20,6 +20,7 @@ public class Player
 
 public class Cliente : MonoBehaviour
 {
+    private SimpleAES simpleAES;
 
     private const int MAX_CONNECTION = 100;
     private int port = 5701;
@@ -36,7 +37,6 @@ public class Cliente : MonoBehaviour
     private int connectionId;
     private bool isConnected;
     private bool isStarted = false;
-    //private SimpleAES simpleAES;
     private byte error;
 
     //el nombre del usuario
@@ -44,13 +44,16 @@ public class Cliente : MonoBehaviour
     private int ourClientId;
 
     public List<Player> jugadores = new List<Player>();
-    public GameObject nombre, password,errortxt,noObjeto,gorro2Prefab, gorrete2Prefab, gorrete3Prefab, pruebita1Prefab;
+    public GameObject nombre, password,errortxt,noObjeto,gorro2Prefab, gorrete2Prefab, gorrete3Prefab, pruebita1Prefab,passwordAju,rePasswordAju;
     private string user,passwd;
-    public GameObject canvas1, canvas2,canvas3,canvas4;
-    public Text usuario;
+    public GameObject canvas1, canvas2,canvas3,canvas4,panelChangePassword,errorPassAju;
+    public Text usuario, ajustesName, ajustesLastName,ajustesEmail;
     public GameObject prefabGusano, posJ1,posJ2,prefabBala, gorroSeleccionado;
     private GameObject bala;
     private bool juego = false, jugadoresCreados = false, balaCreada = false, miTurno = false;
+
+    public Toggle toogleAjustes;
+    public InputField passwordAjuInput;
 
     public void Awake() {
         DontDestroyOnLoad(this.gameObject);
@@ -82,6 +85,7 @@ public class Cliente : MonoBehaviour
 
         connectionTime = Time.time;
         isConnected = true;
+        simpleAES = new SimpleAES();
         
 
     }
@@ -123,18 +127,22 @@ public class Cliente : MonoBehaviour
                         break;
 
                     case "CNN":
-                        Debug.Log("dato del cnn " + splitData[1] + " segundo valor " + splitData[2] + " tercer valor " + splitData[3]);
-                        if (splitData[1].Equals(user)){
-                            rellenarCamposJugadorLocal(splitData);
-                            Debug.Log(jugadorLocal.idUsuario +"aaa");
-                        } else {
-                            rellenarCamposJugadorRival(splitData);
+                        int id = -1;
+                        string nameToLog = "";
+                        //string[] splitSplitData = splitData[1].Split('%');
+                        for (int i = 1; i < splitData.Length; i++) {
+                            string[] splitSplitData = splitData[i].Split('%');
+                            if (splitSplitData[0].Equals(user)) {
+                                rellenarCamposJugadorLocal(splitData[i].Split('%'));
+                                id = int.Parse(splitSplitData[2]);
+                                nameToLog = splitSplitData[0];
+                            } else {
+                                rellenarCamposJugadorRival(splitData[i].Split('%'));
+                            }
                         }
-                        Loggeado(int.Parse(splitData[3]), splitData[1]);
+                        Loggeado(id, nameToLog);
                         break;
 
-                    case "DC":
-                        break;
                     case "INV":
                         if (splitData[3] != "-1") {
                             inventarioCargar(splitData[1], int.Parse(splitData[2]), splitData[3], splitData[4], int.Parse(splitData[5]));
@@ -143,9 +151,30 @@ public class Cliente : MonoBehaviour
                             noObjeto.transform.GetComponent<Text>().text = "No tiene ningun objeto comprado acceda a la tienda para comprar.";
                         }
                         break;
-                    case "EMPEZAR":
-                       
+                    case "AJU":
+                        Debug.Log(splitData[3].Replace('"', ' ').Trim());
+                        string name, lastName, mail;
+
+                        name = splitData[3].Replace('"', ' ').Trim();
+                        lastName = splitData[4].Replace('"', ' ').Trim();
+                        mail = splitData[5].Replace('"', ' ').Trim();
+
+                        ajustesName.text = name;
+                        ajustesLastName.text = lastName;
+                        ajustesEmail.text = mail;
                         break;
+
+                    case "AJUPASS":
+                        Debug.Log("ESTOY EN CASE AJUPASS" + splitData[2]);
+                        if (splitData[2].Equals("1")) {
+                            canvas4.SetActive(false);
+                            canvas2.SetActive(true);
+                        } else {
+                            errorPassAju.GetComponent<Text>().text = "ERROR";
+                            errorPassAju.SetActive(true);
+                        }
+                        break;
+
                     case "POS1":
                         posJ1.transform.position = new Vector3(float.Parse(splitData[1]), float.Parse(splitData[2]), 0);
                         break;
@@ -300,12 +329,13 @@ public class Cliente : MonoBehaviour
 
     }
 
-    private void Send(string message, int channelId)
-    {
-        //Debug.Log("Sending: " + message);
-        byte[] msg = Encoding.Unicode.GetBytes(message);
+    private void Send(string message, int channelId) {
+        string msgBar = message + "|º";
+        //string sMsg = simpleAES.Encrypt(message);
+        byte[] msg = simpleAES.Encrypt(msgBar);
+        simpleAES = new SimpleAES();
+        Debug.Log("El byte Array que envia el cliente es de: " + msg.Length);
         NetworkTransport.Send(hostId, connectionId, channelId, msg, message.Length * sizeof(char), out error);
-
     }
 
     private void Loggeado(int id, string player) {
@@ -367,32 +397,6 @@ public class Cliente : MonoBehaviour
         }
     }
 
-   /* 
-    private void SpawnPlayer(string playerName, int cnnId)
-    {
-        if (cnnId == ourClientId)
-        {
-            canvas1.SetActive(false);
-            canvas2.SetActive(true);
-        }
-
-
-        Player p = new Player();
-        if (cnnId % 2 != 0)
-        {
-            p.avatar = Instantiate(playerPrefab, jugador1.position, Quaternion.identity);//con esto creo un jugador
-        }
-        else
-        {
-            p.avatar = Instantiate(playerPrefab, jugador2.position, Quaternion.identity);//con esto creo un jugador
-        }
-
-
-        p.playerName = playerName;
-        p.connectId = cnnId;
-        jugadores.Add(p);
-        
-    }*/
     public void Registrar() {
         Application.OpenURL("http://192.168.6.7:8000/registrar");        
     }
@@ -403,20 +407,25 @@ public class Cliente : MonoBehaviour
     }
     private void rellenarCamposJugadorLocal( string[] splitData) {
         jugadorLocal = new Player();
-        jugadorLocal.idUsuario = int.Parse(splitData[3]);
-        jugadorLocal.playerName = splitData[1];
-        jugadorLocal.connectId = int.Parse(splitData[2]);
+        jugadorLocal.idUsuario = int.Parse(splitData[2]);
+        jugadorLocal.playerName = splitData[0];
+        jugadorLocal.connectId = int.Parse(splitData[1]);
     }
     private void rellenarCamposJugadorRival(string[] splitData) {
         jugadorRival = new Player();
-        jugadorRival.idUsuario = int.Parse(splitData[3]);
-        jugadorRival.playerName = splitData[1];
-        jugadorRival.connectId = int.Parse(splitData[2]);
+        jugadorRival.idUsuario = int.Parse(splitData[2]);
+        jugadorRival.playerName = splitData[0];
+        jugadorRival.connectId = int.Parse(splitData[1]);
     }
     public void inventarioMenu() {
         Send("INV|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName, reliableChannel);
         canvas2.SetActive(false);
         canvas3.SetActive(true);
+    }
+    public void AjustesMenu() {
+        Send("AJU|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName, reliableChannel);
+        canvas2.SetActive(false);
+        canvas4.SetActive(true);
     }
     public void jugar() {
         SceneManager.LoadScene("Juego");
@@ -424,8 +433,6 @@ public class Cliente : MonoBehaviour
     public void inventarioTienda() {
         //He intentado que abra la tienda ya loggeado pero resulta imposible hacer openUrl + post. O uno u otro pero los 2 juntos no se pueden.
         Application.OpenURL("http://192.168.6.7:8000/login");
-    }
-    public void juegoEmpezado() {
     }
     public void mover(string direccion) {
         if (direccion.Equals("derecha")) {
@@ -497,6 +504,20 @@ public class Cliente : MonoBehaviour
     }
     private void bloquearFunciones() {
         GameObject.Find("Juego").GetComponent<Juego>().miTurno=false;
+    }
+    public void toggleAjustes(bool flag) {
+
+        panelChangePassword.SetActive(toogleAjustes.isOn);
+
+    }
+    public void cambiarContra() {
+
+        if (!passwordAju.GetComponent<Text>().text.Equals(rePasswordAju.GetComponent<Text>().text)) {
+            errorPassAju.SetActive(true);
+            return;
+        }
+
+        Send("AJUPASS|" + jugadorLocal.idUsuario + "|" + jugadorLocal.playerName + "|" + passwordAjuInput.text, reliableChannel);
     }
     private void cambiarTurno() {
         if (miTurno) {
