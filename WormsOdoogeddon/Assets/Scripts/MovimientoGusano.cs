@@ -14,7 +14,7 @@ public class MovimientoGusano : MonoBehaviour {
     private GameObject posLejana,rotador,posCercana;
     private float rotation, actualRotation, rotationPerSec;
     public Text vidaTexto;
-    public bool golpeado,tocandoSuelo;
+    public bool golpeado,tocandoSuelo=false;
     public int vida;
 
     // Use this for initialization
@@ -33,15 +33,25 @@ public class MovimientoGusano : MonoBehaviour {
         golpeado = false;
         vida = 3;
         vidaTexto.text = 3 + "";
-        tocandoSuelo = false;
     }
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.transform.tag.Equals("Bala")) {
             Debug.Log("Golpeado");
             golpeado = true;
             vidaTexto.text = int.Parse(vidaTexto.text) - 1 +"";
-        }else if (collision.transform.tag.Equals("Mapa")) {
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.transform.tag.Equals("Mapa") || collision.transform.tag.Equals("Player")) {
+            Debug.Log("TocandoSuelo");
             tocandoSuelo = true;
+            moveVertical = 0;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision) {
+        if (collision.transform.tag.Equals("Mapa")) {
+            Debug.Log("NoTocandoSuelo");
+            tocandoSuelo = false;
         }
     }
 
@@ -50,12 +60,7 @@ public class MovimientoGusano : MonoBehaviour {
         rotation = rotationPerSec * Time.deltaTime;
         actualRotation = rotador.transform.localRotation.eulerAngles.z;
         rotador.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, actualRotation + rotation));
-        if (miRigibody.velocity.y < -0.1) {
-            tocandoSuelo = false;
-            pararDeMover();
-        } else {
-            tocandoSuelo = true;
-        }
+
     }
     public void moverDerecha() {
         if (tocandoSuelo) {
@@ -63,6 +68,8 @@ public class MovimientoGusano : MonoBehaviour {
             moveHorizontal = 10;
             velocidad = 30;
             sprite.flipX = true;
+            miTransform.Find("Gorreador").transform.GetChild(0).GetComponent<SpriteRenderer>().flipX = true;
+            miTransform.Find("rotador").Find("posLejana").localPosition = miTransform.Find("rotador").Find("posLejana").localPosition * new Vector2(-1, 1);
             anim.SetBool("moviendo", true);
         }
     }
@@ -78,13 +85,15 @@ public class MovimientoGusano : MonoBehaviour {
             moveHorizontal = -10;
             velocidad = 30;
             sprite.flipX = false;
+            miTransform.Find("Gorreador").transform.GetChild(0).GetComponent<SpriteRenderer>().flipX = false;
+            miTransform.Find("rotador").Find("posLejana").localPosition = miTransform.Find("rotador").Find("posLejana").localPosition * new Vector2(-1, 1);
             anim.SetBool("moviendo", true);
         }
     }
     public void saltar() {
         if (tocandoSuelo) {
             miTransform.Find("rotador").Find("posLejana").GetComponent<SpriteRenderer>().enabled = false;
-            moveVertical = 10;
+            moveVertical = 100;
             velocidad = 50;
         }
     }

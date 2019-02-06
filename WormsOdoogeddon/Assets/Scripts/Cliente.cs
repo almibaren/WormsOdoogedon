@@ -371,16 +371,19 @@ public class Cliente : MonoBehaviour {
     }
 
     public void SpawnPlayer() {
+        GameObject gorro;
         if (jugadorLocal.connectId % 2 != 0) {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
-            Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorLocal.gorro)), new Vector2(0, 0), Quaternion.identity, jugadorLocal.avatar.transform.Find("Gorreador").transform);
+            gorro = Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorLocal.gorro)), jugadorLocal.avatar.transform.Find("Gorreador").transform);
+            
             jugadorRival.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-            Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorRival.gorro)), new Vector2(0, 0), Quaternion.identity, jugadorRival.avatar.transform.Find("Gorreador").transform);
+            gorro = Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorRival.gorro)), jugadorRival.avatar.transform.Find("Gorreador").transform);
+            
         } else {
             jugadorLocal.avatar = Instantiate(prefabGusano, posJ2.transform.position, Quaternion.identity);
-            Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorLocal.gorro)), new Vector2(0, 0), Quaternion.identity, jugadorLocal.avatar.transform.Find("Gorreador").transform);
+            gorro = Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorLocal.gorro)), jugadorLocal.avatar.transform.Find("Gorreador").transform);
             jugadorRival.avatar = Instantiate(prefabGusano, posJ1.transform.position, Quaternion.identity);
-            Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorRival.gorro)), new Vector2(0, 0), Quaternion.identity, jugadorRival.avatar.transform.Find("Gorreador").transform);
+            gorro = Instantiate(gorrosPrefab.Find(x => x.name.Equals(jugadorRival.gorro)), jugadorRival.avatar.transform.Find("Gorreador").transform);
         }
         jugadorRival.avatar.transform.position = new Vector3(jugadorRival.avatar.transform.position.x, jugadorRival.avatar.transform.position.y, 0);
         jugadorLocal.avatar.transform.position = new Vector3(jugadorLocal.avatar.transform.position.x, jugadorLocal.avatar.transform.position.y, 0);
