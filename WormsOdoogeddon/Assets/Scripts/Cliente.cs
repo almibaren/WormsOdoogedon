@@ -452,6 +452,7 @@ public class Cliente : MonoBehaviour
             Debug.Log("INVENTARIO ES NULL");
         }
         for (int i = 0; i < contador; i++) {
+            Debug.Log(nombreGorro[i]);
             Vector2 pos;
             if (i % 2 == 0) {
                 pos = new Vector2(4, 3 - (i * 2));
@@ -459,16 +460,12 @@ public class Cliente : MonoBehaviour
                 pos = new Vector2(-4, 3 - (i * 2));
             }
             if (nombreGorro[i].Trim().Equals("gorro2")) {
-                Instantiate(gorro2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
                 gorros.Add(Instantiate(gorro2Prefab, pos, Quaternion.identity, inventario));
             } else if (nombreGorro[i].Trim().Equals("gorrete2")) {
-                Instantiate(gorrete2Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
                 gorros.Add(Instantiate(gorrete2Prefab, pos, Quaternion.identity, inventario));
             } else if (nombreGorro[i].Trim().Equals("gorrete3")) {
-                Instantiate(gorrete3Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
                 gorros.Add(Instantiate(gorrete3Prefab, pos, Quaternion.identity, inventario));
             } else if (nombreGorro[i].Trim().Equals("pruebita1")) {
-                Instantiate(pruebita1Prefab, new Vector2(0, 2 - (i * 2)), Quaternion.identity, inventario);
                 gorros.Add(Instantiate(pruebita1Prefab, pos, Quaternion.identity, inventario));
             }
         }
