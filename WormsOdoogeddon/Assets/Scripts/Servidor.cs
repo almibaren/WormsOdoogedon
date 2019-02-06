@@ -10,14 +10,13 @@ using UnityEngine.UI;
 
 
 //Clase para los clientes
-public class ServerClient{
+public class ServerClient {
     public int connectionId;
     public string playerName;
     public int id;
 }
 
-public class Servidor : MonoBehaviour
-{
+public class Servidor : MonoBehaviour {
 
     private const int MAX_CONNECTION = 100;
     private int port = 5701;
@@ -42,10 +41,9 @@ public class Servidor : MonoBehaviour
     GameObject posJ1;
     private SimpleAES simpleAES;
 
-    private void Start()
-    {
+    private void Start() {
 
-     
+
         NetworkTransport.Init();
         ConnectionConfig cc = new ConnectionConfig();
 
@@ -65,11 +63,9 @@ public class Servidor : MonoBehaviour
 
     }
 
-    private void Update()
-    {
+    private void Update() {
 
-        if (!isStarted)
-        {
+        if (!isStarted) {
             return;
         }
 
@@ -80,11 +76,10 @@ public class Servidor : MonoBehaviour
         int bufferSize = 1024;
         int dataSize;
         byte error;
-        
-        
+
+
         NetworkEventType recData = NetworkTransport.Receive(out recHostId, out connectionId, out channelId, recBuffer, bufferSize, out dataSize, out error);
-        switch (recData)
-        {
+        switch (recData) {
             case NetworkEventType.Nothing:
                 break;
 
@@ -98,10 +93,9 @@ public class Servidor : MonoBehaviour
                 ToLog("QUE RECIBO DE CADA CONEXION" + connectionId + ": " + msg);
                 msg = simpleAES.Decrypt(recBuffer);
                 string[] splitData = msg.Split('|');
-                switch (splitData[0])
-                {
+                switch (splitData[0]) {
                     case "NAMEIS":
-                        SymfonyConnect(connectionId, splitData[1],splitData[2]);
+                        SymfonyConnect(connectionId, splitData[1], splitData[2]);
                         break;
 
                     case "EMPEZAR":
@@ -110,7 +104,7 @@ public class Servidor : MonoBehaviour
                         break;
 
                     case "INV":
-                        inventario(int.Parse(splitData[1]),connectionId,splitData[2]);
+                        inventario(int.Parse(splitData[1]), connectionId, splitData[2]);
                         break;
 
                     case "AJU":
@@ -154,7 +148,9 @@ public class Servidor : MonoBehaviour
                     case "GOL":
                         Send("GOL|" + splitData[1], reliableChannel, clients);
                         break;
-
+                    case "GORSEL":
+                        Send("GORSEL|" + splitData[1] + "|" + splitData[2], reliableChannel, clients);
+                        break;
                     default:
                         ToLog("Mensaje Invalido" + msg);
                         break;
@@ -172,8 +168,7 @@ public class Servidor : MonoBehaviour
 
 
 
-    private void OnConnection(int cnnId)
-    {
+    private void OnConnection(int cnnId) {
         //Añadir a la lista
         ServerClient c = new ServerClient();
         c.connectionId = cnnId;
@@ -194,37 +189,33 @@ public class Servidor : MonoBehaviour
 
     }
 
-    private void Send(string message, int channelId, int cnnId)
-    {
+    private void Send(string message, int channelId, int cnnId) {
         List<ServerClient> c = new List<ServerClient>();
         c.Add(clients.Find(x => x.connectionId == cnnId));
         //ToLog("-----------------------enviado---------------------------");
         Send(message, channelId, c);
     }
 
-    private void Send(string message, int channelId, List<ServerClient> c)
-    {
+    private void Send(string message, int channelId, List<ServerClient> c) {
         //Debug.Log("Sending: " + message);
         //byte[] msg = simpleAES.Encrypt(message);
         //ToLog("Sending: " + message);
         byte[] msg = Encoding.Unicode.GetBytes(message);
-        foreach (ServerClient sc in c)
-        {
+        foreach (ServerClient sc in c) {
             NetworkTransport.Send(hostId, sc.connectionId, channelId, msg, message.Length * sizeof(char), out error);
             //ToLog("-enviado2-"+message);
         }
     }
 
-    private void SymfonyConnect(int cnnId, string playerName, string playerPasswd)
-    {
+    private void SymfonyConnect(int cnnId, string playerName, string playerPasswd) {
         //Conectar con symphony
         string LoginUrl = "http://192.168.6.7:8000/ws/login";
         WWWForm loginArray = new WWWForm();
         loginArray.AddField("user", playerName);
         loginArray.AddField("passwd", playerPasswd);
-        WWW www = new WWW(LoginUrl,loginArray);
+        WWW www = new WWW(LoginUrl, loginArray);
         StartCoroutine(WaitForWWW(www, cnnId, playerName));
-        
+
         //Enviar a los demas clientes el jugador conectado
         //ToLog("Nuevo jugador" + playerName + "Se ha unido a la partida");
     }
@@ -274,11 +265,11 @@ public class Servidor : MonoBehaviour
         if (string.IsNullOrEmpty(www.error)) {
             JSONObject f = new JSONObject(www.text);
             ToLog(f.ToString());
-            String nombres="", rutas="";
+            String nombres = "", rutas = "";
             bool datos = true;
-            int contador=0;
+            int contador = 0;
             while (datos) {
-               
+
                 try {
                     nombres = nombres + f[contador]["nombre"] + "_";
                     ToLog(nombres);
@@ -288,7 +279,7 @@ public class Servidor : MonoBehaviour
                     if (f[contador].Equals("")) {
                         datos = false;
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     datos = false;
                 }
             }
